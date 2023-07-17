@@ -63,7 +63,7 @@ public class AuthService {
     public ResponseObject seekerSignup(SeekerSignupRequest seekerSignupRequest) {
         // Kiểm tra username đã tồn tại chưa
         if (userRepository.existsByUsername(seekerSignupRequest.getUsername())) {
-      return ResponseObject.message("Username already taken");
+            return ResponseObject.message("Username already taken");
         }
         // Tạo đối tượng User từ thông tin đăng ký
         User user = new User(seekerSignupRequest.getUsername(), passwordEncoder.encode(seekerSignupRequest.getPassword())
@@ -82,7 +82,7 @@ public class AuthService {
         }
         // Kiểm tra tên công ty đã tồn tại chưa (một công ty chỉ được đăng ký 1 tài khoản)
         if (hiringOrganizationRepository.existsByName(hrSignupRequest.getName())) {
-      return ResponseObject.message("Company Name Already Taken");
+            return ResponseObject.message("Company Name Already Taken");
         }
         User user = new User();
         user.setUsername(hrSignupRequest.getUsername());

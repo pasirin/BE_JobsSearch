@@ -42,14 +42,14 @@ public class AuthController {
     @PostMapping("/seeker/signup")
     public ResponseEntity<?> register(@RequestBody SeekerSignupRequest seekerSignupRequest) {
         ResponseObject output = authService.seekerSignup(seekerSignupRequest);
-        return output.getStatus()? ResponseEntity.ok(output.getData()) : ResponseEntity.badRequest().body(output.getMessage());
+        return output.getStatus() ? ResponseEntity.ok(output.getData()) : ResponseEntity.badRequest().body(output.getMessage());
 
     }
 
     @PostMapping("/organization/signup")
     public ResponseEntity<?> hrRegister(@RequestBody HrSignupRequest hrSignupRequest) {
         ResponseObject output = authService.hrSignup(hrSignupRequest);
-        return output.getStatus()? ResponseEntity.ok(output.getData()) : ResponseEntity.badRequest().body(output.getMessage());
+        return output.getStatus() ? ResponseEntity.ok(output.getData()) : ResponseEntity.badRequest().body(output.getMessage());
     }
 
 

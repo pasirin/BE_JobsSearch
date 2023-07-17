@@ -33,6 +33,7 @@ public class SwaggerConfig {
     private ApiKey apiKey() {
         return new ApiKey("Bearer Token", "Authorization", "header");
     }
+
     private ApiInfo apiInfo() {
         // Thông tin về API của bạn
         return new ApiInfoBuilder()
