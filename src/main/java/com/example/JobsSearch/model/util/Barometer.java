@@ -1,11 +1,12 @@
 package com.example.JobsSearch.model.util;
 
 import com.example.JobsSearch.model.Job;
+import lombok.Data;
 
 import javax.persistence.*;
 import java.util.List;
 
-
+@Data
 @Entity
 public class Barometer extends BaseContent {
     @Id

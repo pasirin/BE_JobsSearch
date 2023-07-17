@@ -3,7 +3,7 @@ package com.example.JobsSearch.payload.Request;
 
 import javax.validation.constraints.NotBlank;
 
-public class SignupRequest {
+public class SeekerSignupRequest {
 
     @NotBlank
     private String username;

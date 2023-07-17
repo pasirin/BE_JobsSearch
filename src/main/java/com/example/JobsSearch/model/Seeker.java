@@ -1,10 +1,13 @@
 package com.example.JobsSearch.model;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+@Data
 @Entity
 @Table(name = "seekers")
 public class Seeker {
@@ -15,8 +18,6 @@ public class Seeker {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
     private User user;
-
-    private String email;
 
     private String photo;
 
@@ -44,26 +45,12 @@ public class Seeker {
     public Seeker() {
     }
 
-    public Seeker(Long id, User user, String email, String photo, String phone_number, Date dob, String address, String website, String education, String experience, String skills, String achievements, String other_details, Set<History> histories) {
-        this.id = id;
+    public Seeker(User user) {
         this.user = user;
-        this.email = email;
-        this.photo = photo;
-        this.phone_number = phone_number;
-        this.dob = dob;
-        this.address = address;
-        this.website = website;
-        this.education = education;
-        this.experience = experience;
-        this.skills = skills;
-        this.achievements = achievements;
-        this.other_details = other_details;
-        this.histories = histories;
     }
 
-    public Seeker(User user_id, String email, String phone_number, Date dob, String address, String website, String education, String experience, String skills, String achievements, String other_details) {
-        this.user = user_id;
-        this.email = email;
+    public void setProfile(String photo, String phone_number, Date dob, String address, String website, String education, String experience, String skills, String achievements, String other_details) {
+        this.photo = photo;
         this.phone_number = phone_number;
         this.dob = dob;
         this.address = address;
@@ -92,11 +79,11 @@ public class Seeker {
     }
 
     public String getEmail() {
-        return email;
+        return user.getEmail();
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        user.setEmail(email);
     }
 
     public String getPhone_number() {

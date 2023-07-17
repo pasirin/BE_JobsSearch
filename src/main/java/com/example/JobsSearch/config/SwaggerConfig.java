@@ -1,4 +1,4 @@
-package com.example.JobsSearch.swagger;
+package com.example.JobsSearch.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

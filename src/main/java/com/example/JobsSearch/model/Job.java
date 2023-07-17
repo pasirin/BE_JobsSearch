@@ -40,7 +40,7 @@ public class Job {
 
     private String jobTitleCatchPhrase;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "locationId")
     private Location location;
 

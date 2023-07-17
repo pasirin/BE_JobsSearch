@@ -1,8 +1,8 @@
-package com.example.JobsSearch.security;
+package com.example.JobsSearch.config;
 
-import com.example.JobsSearch.security.jwt.AuthEntryPointJwt;
-import com.example.JobsSearch.security.jwt.UserDetailServiceImpl;
-import com.example.JobsSearch.security.jwt.JwtAuthenticationFilter;
+import com.example.JobsSearch.security.AuthEntryPointJwt;
+import com.example.JobsSearch.security.UserDetailServiceImpl;
+import com.example.JobsSearch.security.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,6 +36,11 @@ public class WebSecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+//    @Bean
+//    public PasswordEncoder passwordEncoder() {
+//        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+//    }
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {

@@ -1,4 +1,4 @@
-package com.example.JobsSearch.security.jwt;
+package com.example.JobsSearch.security;
 
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;

@@ -1,9 +1,11 @@
 package com.example.JobsSearch.model.util;
 
 import com.example.JobsSearch.model.Job;
+import lombok.Data;
 
 import javax.persistence.*;
 
+@Data
 @Entity
 public class WebApplication {
     @Id

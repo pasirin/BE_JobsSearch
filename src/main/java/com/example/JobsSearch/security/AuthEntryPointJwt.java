@@ -1,4 +1,4 @@
-package com.example.JobsSearch.security.jwt;
+package com.example.JobsSearch.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;

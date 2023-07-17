@@ -1,12 +1,14 @@
 package com.example.JobsSearch.model;
 
 import com.example.JobsSearch.model.util.SeekerJobId;
+import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@Data
 @Entity
 @Table(name = "histories")
 @AssociationOverrides({

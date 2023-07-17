@@ -1,24 +1,18 @@
 package com.example.JobsSearch.model.util;
 
+import lombok.Data;
+
 import javax.persistence.*;
 
+@Data
 @Entity
 public class Location {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String city;
-    private String prefecture;
 
-    private String description;
-
-    private String postal_code;
-
-//    @OneToOne(mappedBy = "location")
-//    private Jobs job;
-
-    public Location(Long id) {
-        this.id = id;
+    public Location() {
     }
 
     public Long getId() {
@@ -29,13 +23,6 @@ public class Location {
         this.id = id;
     }
 
-    public Location(Long id, String city, String prefecture, String description, String postal_code) {
-        this.id = id;
-        this.city = city;
-        this.prefecture = prefecture;
-        this.description = description;
-        this.postal_code = postal_code;
-    }
 
     public String getCity() {
         return city;
@@ -45,27 +32,5 @@ public class Location {
         this.city = city;
     }
 
-    public String getPrefecture() {
-        return prefecture;
-    }
 
-    public void setPrefecture(String prefecture) {
-        this.prefecture = prefecture;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getPostal_code() {
-        return postal_code;
-    }
-
-    public void setPostal_code(String postal_code) {
-        this.postal_code = postal_code;
-    }
 }

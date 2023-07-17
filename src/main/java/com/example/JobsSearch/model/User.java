@@ -1,15 +1,19 @@
 package com.example.JobsSearch.model;
 
 import com.sun.istack.NotNull;
+import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
-import java.sql.Date;
 import java.time.LocalDateTime;
 
+@Data
 @Entity
-@Table(name = "users")
+@Table(name = "users",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = "email")
+        })
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,12 +26,14 @@ public class User {
     @NotNull
     private String role;
 
+    @Column(unique = true)
+    private String email;
+
     @CreatedDate
     private LocalDateTime createdAt;
 
     @LastModifiedDate
     private LocalDateTime updatedAt;
-
 
     public User() {
     }
@@ -39,15 +45,13 @@ public class User {
     }
 
 
-    public User(Long id, String username, String password, String role, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.id = id;
+    public User(String username, String password, String role, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.username = username;
         this.password = password;
         this.role = role;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
-
 
     public Long getId() {
         return id;

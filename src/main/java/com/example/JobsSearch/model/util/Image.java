@@ -1,7 +1,10 @@
 package com.example.JobsSearch.model.util;
 
+import lombok.Data;
+
 import javax.persistence.*;
 
+@Data
 @Entity
 public class Image {
     @Id

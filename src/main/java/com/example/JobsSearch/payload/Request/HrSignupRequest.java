@@ -1,23 +1,18 @@
-package com.example.JobsSearch.model;
+package com.example.JobsSearch.payload.Request;
 
 import com.example.JobsSearch.model.util.OrganizationType;
-import lombok.Data;
 
-import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
-@Data
-@Entity
-@Table(name = "hiring_organization")
-public class HiringOrganization {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+public class HrSignupRequest {
+    @NotBlank
+    private String username;
+    @NotBlank
+    private String password;
 
     private String name;
+
+    private String email;
 
     private String phone_number;
 
@@ -29,12 +24,11 @@ public class HiringOrganization {
 
     private OrganizationType organizationType;
 
-    public HiringOrganization() {
-    }
-
-    public HiringOrganization(User user, String name, String phone_number, String website, String address, String introduction, OrganizationType organizationType) {
-        this.user = user;
+    public HrSignupRequest(String username, String password, String name, String email, String phone_number, String website, String address, String introduction, OrganizationType organizationType) {
+        this.username = username;
+        this.password = password;
         this.name = name;
+        this.email = email;
         this.phone_number = phone_number;
         this.website = website;
         this.address = address;
@@ -42,16 +36,23 @@ public class HiringOrganization {
         this.organizationType = organizationType;
     }
 
-    public Long getId() {
-        return id;
+    public HrSignupRequest() {
     }
 
-    public User getUser() {
-        return user;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getName() {
@@ -63,11 +64,11 @@ public class HiringOrganization {
     }
 
     public String getEmail() {
-        return user.getEmail();
+        return email;
     }
 
     public void setEmail(String email) {
-        user.setEmail(email);
+        this.email = email;
     }
 
     public String getPhone_number() {

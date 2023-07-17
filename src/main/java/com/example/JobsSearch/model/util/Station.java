@@ -1,5 +1,8 @@
 package com.example.JobsSearch.model.util;
 
+import lombok.Data;
+
+@Data
 public class Station {
     private String station;
 

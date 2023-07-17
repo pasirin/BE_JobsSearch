@@ -1,8 +1,11 @@
 package com.example.JobsSearch.controller;
 
+import com.example.JobsSearch.model.HiringOrganization;
+import com.example.JobsSearch.model.Seeker;
 import com.example.JobsSearch.model.User;
+import com.example.JobsSearch.payload.Request.HrSignupRequest;
 import com.example.JobsSearch.payload.Request.LoginRequest;
-import com.example.JobsSearch.payload.Request.SignupRequest;
+import com.example.JobsSearch.payload.Request.SeekerSignupRequest;
 import com.example.JobsSearch.payload.Response.ResponseObject;
 import com.example.JobsSearch.service.impl.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,15 +37,26 @@ public class AuthController {
         return ResponseEntity.ok().body(authService.login(loginRequest));
     }
 
-    @PostMapping("/signup")
-    public ResponseEntity<?> register(@RequestBody SignupRequest signupRequest) {
-        User user = authService.signup(signupRequest);
+    @PostMapping("/seeker/signup")
+    public ResponseEntity<?> register(@RequestBody SeekerSignupRequest seekerSignupRequest) {
+        Seeker user = authService.seekerSignup(seekerSignupRequest);
         if (user == null) {
             return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED)
                     .body(new ResponseObject("failed", "sign up failed", ""));
         }
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new ResponseObject("ok","sign up successfully", user));
+                .body(new ResponseObject("ok", "sign up successfully", user));
+    }
+
+    @PostMapping("/organization/signup")
+    public ResponseEntity<?> hrRegister(@RequestBody HrSignupRequest hrSignupRequest) {
+        HiringOrganization user = authService.hrSignup(hrSignupRequest);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED)
+                    .body(new ResponseObject("failed", "sign up failed", ""));
+        }
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new ResponseObject("ok", "sign up successfully", user));
     }
 
 

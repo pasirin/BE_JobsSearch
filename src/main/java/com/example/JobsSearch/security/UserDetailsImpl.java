@@ -1,4 +1,4 @@
-package com.example.JobsSearch.security.jwt;
+package com.example.JobsSearch.security;
 
 import com.example.JobsSearch.model.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
