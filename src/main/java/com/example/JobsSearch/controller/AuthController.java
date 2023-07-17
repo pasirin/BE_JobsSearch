@@ -17,11 +17,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
+@RequestMapping("/auth")
 public class AuthController {
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -39,24 +41,15 @@ public class AuthController {
 
     @PostMapping("/seeker/signup")
     public ResponseEntity<?> register(@RequestBody SeekerSignupRequest seekerSignupRequest) {
-        Seeker user = authService.seekerSignup(seekerSignupRequest);
-        if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED)
-                    .body(new ResponseObject("failed", "sign up failed", ""));
-        }
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new ResponseObject("ok", "sign up successfully", user));
+        ResponseObject output = authService.seekerSignup(seekerSignupRequest);
+        return output.getStatus()? ResponseEntity.ok(output.getData()) : ResponseEntity.badRequest().body(output.getMessage());
+
     }
 
     @PostMapping("/organization/signup")
     public ResponseEntity<?> hrRegister(@RequestBody HrSignupRequest hrSignupRequest) {
-        HiringOrganization user = authService.hrSignup(hrSignupRequest);
-        if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED)
-                    .body(new ResponseObject("failed", "sign up failed", ""));
-        }
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new ResponseObject("ok", "sign up successfully", user));
+        ResponseObject output = authService.hrSignup(hrSignupRequest);
+        return output.getStatus()? ResponseEntity.ok(output.getData()) : ResponseEntity.badRequest().body(output.getMessage());
     }
 
 

@@ -7,6 +7,7 @@ import com.example.JobsSearch.payload.Request.HrSignupRequest;
 import com.example.JobsSearch.payload.Request.LoginRequest;
 import com.example.JobsSearch.payload.Request.SeekerSignupRequest;
 import com.example.JobsSearch.payload.Response.JwtResponse;
+import com.example.JobsSearch.payload.Response.ResponseObject;
 import com.example.JobsSearch.repository.HiringOrganizationRepository;
 import com.example.JobsSearch.repository.SeekerRepository;
 import com.example.JobsSearch.repository.UserRepository;
@@ -28,24 +29,20 @@ import java.util.stream.Collectors;
 @Service
 public class AuthService {
 
-    private final UserRepository userRepository;
-    private final SeekerRepository seekerRepository;
-
-    private final HiringOrganizationRepository hiringOrganizationRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtTokenProvider jwtTokenProvider;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private SeekerRepository seekerRepository;
+    @Autowired
+    private HiringOrganizationRepository hiringOrganizationRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
 
     @Autowired
     AuthenticationManager authenticationManager;
 
-
-    public AuthService(UserRepository userRepository, SeekerRepository seekerRepository, HiringOrganizationRepository hiringOrganizationRepository, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenUtil) {
-        this.userRepository = userRepository;
-        this.seekerRepository = seekerRepository;
-        this.hiringOrganizationRepository = hiringOrganizationRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtTokenProvider = jwtTokenUtil;
-    }
 
     public JwtResponse login(LoginRequest loginRequest) {
         Authentication authentication =
@@ -63,41 +60,41 @@ public class AuthService {
         return new JwtResponse(jwt, userDetails.getId(), userDetails.getUsername(), roles);
     }
 
-    public Seeker seekerSignup(SeekerSignupRequest seekerSignupRequest) {
+    public ResponseObject seekerSignup(SeekerSignupRequest seekerSignupRequest) {
         // Kiểm tra username đã tồn tại chưa
         if (userRepository.existsByUsername(seekerSignupRequest.getUsername())) {
-            throw new IllegalArgumentException("Username is already taken");
+      return ResponseObject.message("Username already taken");
         }
         // Tạo đối tượng User từ thông tin đăng ký
         User user = new User(seekerSignupRequest.getUsername(), passwordEncoder.encode(seekerSignupRequest.getPassword())
-                , "ROLE_SEEKER", LocalDateTime.now(), LocalDateTime.now());
+                , "ROLE_SEEKER");
 
         // Lưu user vào cơ sở dữ liệu
         userRepository.save(user);
-
-        return seekerRepository.save(new Seeker(user));
+        seekerRepository.save(new Seeker(user));
+        return ResponseObject.status(true).setData(user);
     }
 
-    public HiringOrganization hrSignup(HrSignupRequest hrSignupRequest) {
+    public ResponseObject hrSignup(HrSignupRequest hrSignupRequest) {
         // Kiểm tra username đã tồn tại chưa
         if (userRepository.existsByUsername(hrSignupRequest.getUsername())) {
-            throw new IllegalArgumentException("Username đã tồn tại");
+            return ResponseObject.message("Username Already Taken");
         }
         // Kiểm tra tên công ty đã tồn tại chưa (một công ty chỉ được đăng ký 1 tài khoản)
         if (hiringOrganizationRepository.existsByName(hrSignupRequest.getName())) {
-            throw new IllegalArgumentException("Tên công ty đã tồn tại");
+      return ResponseObject.message("Company Name Already Taken");
         }
         User user = new User();
         user.setUsername(hrSignupRequest.getUsername());
         user.setPassword(passwordEncoder.encode(hrSignupRequest.getPassword()));
         user.setRole("ROLE_HR");
-        user.setCreatedAt(LocalDateTime.now());
-        user.setUpdatedAt(LocalDateTime.now());
         userRepository.save(user);
         HiringOrganization hiringOrganization = new HiringOrganization(user, hrSignupRequest.getName()
                 , hrSignupRequest.getPhone_number(), hrSignupRequest.getWebsite()
                 , hrSignupRequest.getAddress(), hrSignupRequest.getIntroduction(), hrSignupRequest.getOrganizationType());
-        return hiringOrganizationRepository.save(hiringOrganization);
+        hiringOrganizationRepository.save(hiringOrganization);
+
+        return ResponseObject.status(true).setData(hiringOrganization);
     }
 
 

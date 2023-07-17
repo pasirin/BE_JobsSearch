@@ -4,6 +4,7 @@ import com.example.JobsSearch.model.util.SeekerJobId;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
         @AssociationOverride(name = "primaryKey.seeker", joinColumns = @JoinColumn(name = "seekerId")),
         @AssociationOverride(name = "primaryKey.job", joinColumns = @JoinColumn(name = "jobId"))
 })
+@EntityListeners(AuditingEntityListener.class)
 public class History {
     @EmbeddedId
     private SeekerJobId primaryKey;
