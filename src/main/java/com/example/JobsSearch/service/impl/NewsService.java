@@ -29,7 +29,7 @@ public class NewsService implements ServiceCRUD<NewsRequest, News> {
             newsRequest.getEventStartAt(),
             newsRequest.getEventEndAt());
     newsRepository.save(news);
-    return ResponseObject.status(true);
+    return ResponseObject.ok();
   }
 
   @Override

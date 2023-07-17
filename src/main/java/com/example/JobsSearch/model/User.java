@@ -7,6 +7,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import java.time.LocalDateTime;
 
 @Data
@@ -25,6 +26,7 @@ public class User {
     @NotNull
     private String role;
 
+    @Email
     private String email;
 
     @CreatedDate

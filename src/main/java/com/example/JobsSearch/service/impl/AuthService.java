@@ -105,4 +105,26 @@ public class AuthService {
         return ResponseObject.status(true);
     }
 
+    public ResponseObject changePassword(Long id, String username, String password) {
+        if(userRepository.findById(id).isEmpty()) {
+            return ResponseObject.message("There Aren't any user with the requested Id");
+        }
+        User user = userRepository.findById(id).get();
+        if(!user.getUsername().equals(username)) {
+            return ResponseObject.message("ERROR: Conflicting username and id");
+        }
+        user.setPassword(passwordEncoder.encode(password));
+        userRepository.save(user);
+        return ResponseObject.ok();
+    }
+
+    public ResponseObject changeEmail(Long id, String Email) {
+        if(userRepository.findById(id).isEmpty()) {
+            return ResponseObject.message("There Aren't any user with the requested Id");
+        }
+        User user = userRepository.findById(id).get();
+        user.setEmail(Email);
+        userRepository.save(user);
+        return ResponseObject.ok();
+    }
 }
