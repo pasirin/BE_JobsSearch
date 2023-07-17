@@ -78,10 +78,12 @@ public class Seeker {
         return id;
     }
 
+    @Transient
     public String getEmail() {
         return user.getEmail();
     }
 
+    @Transient
     public void setEmail(String email) {
         user.setEmail(email);
     }

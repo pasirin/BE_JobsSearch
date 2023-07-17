@@ -45,6 +45,10 @@ public class ResponseObject {
         return new ResponseObject(message);
     }
 
+    public static ResponseObject ok() {
+        return new ResponseObject().setStatus(true);
+    }
+
     public Boolean getStatus() {
         return status;
     }

@@ -27,12 +27,8 @@ import javax.servlet.http.HttpServletRequest;
 public class AuthController {
     @Autowired
     private AuthenticationManager authenticationManager;
-    private final AuthService authService;
-
-    public AuthController(AuthService authService) {
-        this.authService = authService;
-    }
-
+    @Autowired
+    private AuthService authService;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {

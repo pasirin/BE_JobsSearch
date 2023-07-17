@@ -13,48 +13,36 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
+  public static final String AuthorizationHeader = "Authorization";
 
-    @Bean
-    public Docket api() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .select()
-                .apis(RequestHandlerSelectors.basePackage("com.example.JobsSearch"))
-                .paths(PathSelectors.any())
-                .build()
-                .apiInfo(apiInfo())
-                .securitySchemes(Arrays.asList(securityScheme()))
-                .securityContexts(Arrays.asList(securityContext()));
-    }
+  private ApiKey apiKey() {
+    return new ApiKey("JWT", AuthorizationHeader, "header");
+  }
 
-    private ApiKey apiKey() {
-        return new ApiKey("Bearer Token", "Authorization", "header");
-    }
+  private List<SecurityReference> defaultAuth() {
+    AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
+    AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
+    authorizationScopes[0] = authorizationScope;
+    return List.of(new SecurityReference("JWT", authorizationScopes));
+  }
 
-    private ApiInfo apiInfo() {
-        // Thông tin về API của bạn
-        return new ApiInfoBuilder()
-                .title("API MiniProject")
-                .description("Use for testing backend")
-                .version("1.0.0")
-                .contact(new Contact("Kuetto", "", "nguyentuongquyet@gmail.com"))
-                .build();
-    }
+  private SecurityContext securityContext() {
+    return SecurityContext.builder().securityReferences(defaultAuth()).build();
+  }
 
-    private SecurityScheme securityScheme() {
-        return new BasicAuth("basicAuth");
-    }
-
-    private SecurityContext securityContext() {
-        return SecurityContext.builder()
-                .securityReferences(Arrays.asList(basicAuthReference()))
-                .build();
-    }
-
-    private SecurityReference basicAuthReference() {
-        return new SecurityReference("basicAuth", new AuthorizationScope[0]);
-    }
+  @Bean
+  public Docket api() {
+    return new Docket(DocumentationType.SWAGGER_2)
+        .securityContexts(List.of(securityContext()))
+        .securitySchemes(List.of(apiKey()))
+        .select()
+        .apis(RequestHandlerSelectors.any())
+        .paths(PathSelectors.any())
+        .build();
+  }
 }

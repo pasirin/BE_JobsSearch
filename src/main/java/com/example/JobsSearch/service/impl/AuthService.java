@@ -93,9 +93,16 @@ public class AuthService {
                 , hrSignupRequest.getPhone_number(), hrSignupRequest.getWebsite()
                 , hrSignupRequest.getAddress(), hrSignupRequest.getIntroduction(), hrSignupRequest.getOrganizationType());
         hiringOrganizationRepository.save(hiringOrganization);
-
+        
         return ResponseObject.status(true).setData(hiringOrganization);
     }
 
+    public ResponseObject deleteSeeker(Long id) {
+        if(!seekerRepository.existsById(id)) {
+            return ResponseObject.message("There Are No Seeker With The Requested Id");
+        }
+        seekerRepository.deleteById(id);
+        return ResponseObject.status(true);
+    }
 
 }

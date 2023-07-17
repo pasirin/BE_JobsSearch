@@ -1,72 +1,42 @@
-package com.example.JobsSearch.model;
+package com.example.JobsSearch.payload.Request;
 
-import lombok.Data;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
-@Data
-@Entity
-@Table(name = "news")
-@EntityListeners(AuditingEntityListener.class)
-public class News {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @CreatedDate
-    private LocalDateTime createdAt;
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    @LastModifiedDate
-    private LocalDateTime updatedAt;
-
+public class NewsRequest {
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime opensAt;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime expiresAt;
+
+    @NotBlank
     private String title;
+
+    @NotBlank
     private String subTitle;
+
+    @NotBlank
     private String category;
+
+    @NotBlank
     private String body;
+
+    @NotBlank
     private String eventPageUrl;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime eventStartAt;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime eventEndAt;
-
-    public News() {
-    }
-
-    public News(LocalDateTime opensAt, LocalDateTime expiresAt, String title, String subTitle, String category, String body, String eventPageUrl, LocalDateTime eventStartAt, LocalDateTime eventEndAt) {
-
-        this.opensAt = opensAt;
-        this.expiresAt = expiresAt;
-        this.title = title;
-        this.subTitle = subTitle;
-        this.category = category;
-        this.body = body;
-        this.eventPageUrl = eventPageUrl;
-        this.eventStartAt = eventStartAt;
-        this.eventEndAt = eventEndAt;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
 
     public LocalDateTime getOpensAt() {
         return opensAt;
