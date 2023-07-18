@@ -19,6 +19,8 @@ public class Seeker {
     @JoinColumn(name = "userId")
     private User user;
 
+    private String name;
+
     private String photo;
 
     private String phone_number;

