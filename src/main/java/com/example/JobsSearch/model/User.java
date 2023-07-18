@@ -1,5 +1,7 @@
 package com.example.JobsSearch.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sun.istack.NotNull;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
@@ -14,6 +16,7 @@ import java.time.LocalDateTime;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "users")
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,6 +25,7 @@ public class User {
     @NotNull
     private String username;
     @NotNull
+    @JsonIgnore
     private String password;
     @NotNull
     private String role;
@@ -30,9 +34,11 @@ public class User {
     private String email;
 
     @CreatedDate
+    @JsonIgnore
     private LocalDateTime createdAt;
 
     @LastModifiedDate
+    @JsonIgnore
     private LocalDateTime updatedAt;
 
     public User() {

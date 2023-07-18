@@ -32,8 +32,11 @@ public class UserService {
     return userRepository.findByUsernameLike("%" + name + "%");
   }
 
-  public Optional<User> getById(Long id) {
-    return userRepository.findById(id);
+  public ResponseObject getById(Long id) {
+    if(userRepository.findById(id).isEmpty()) {
+      return ResponseObject.message("There Aren't any user with the requested Id");
+    }
+    return ResponseObject.ok().setData(userRepository.findById(id).get());
   }
 
   public ResponseObject delete(Long id) {
