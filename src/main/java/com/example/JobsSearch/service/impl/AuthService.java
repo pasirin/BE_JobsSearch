@@ -87,18 +87,19 @@ public class AuthService {
         User user = new User();
         user.setUsername(hrSignupRequest.getUsername());
         user.setPassword(passwordEncoder.encode(hrSignupRequest.getPassword()));
+        user.setEmail(hrSignupRequest.getEmail());
         user.setRole("ROLE_HR");
         userRepository.save(user);
         HiringOrganization hiringOrganization = new HiringOrganization(user, hrSignupRequest.getName()
                 , hrSignupRequest.getPhone_number(), hrSignupRequest.getWebsite()
                 , hrSignupRequest.getAddress(), hrSignupRequest.getIntroduction(), hrSignupRequest.getOrganizationType());
         hiringOrganizationRepository.save(hiringOrganization);
-        
+
         return ResponseObject.status(true).setData(hiringOrganization);
     }
 
     public ResponseObject deleteSeeker(Long id) {
-        if(!seekerRepository.existsById(id)) {
+        if (!seekerRepository.existsById(id)) {
             return ResponseObject.message("There Are No Seeker With The Requested Id");
         }
         seekerRepository.deleteById(id);
@@ -106,11 +107,11 @@ public class AuthService {
     }
 
     public ResponseObject changePassword(Long id, String username, String password) {
-        if(userRepository.findById(id).isEmpty()) {
+        if (userRepository.findById(id).isEmpty()) {
             return ResponseObject.message("There Aren't any user with the requested Id");
         }
         User user = userRepository.findById(id).get();
-        if(!user.getUsername().equals(username)) {
+        if (!user.getUsername().equals(username)) {
             return ResponseObject.message("ERROR: Conflicting username and id");
         }
         user.setPassword(passwordEncoder.encode(password));
@@ -119,7 +120,7 @@ public class AuthService {
     }
 
     public ResponseObject changeEmail(Long id, String Email) {
-        if(userRepository.findById(id).isEmpty()) {
+        if (userRepository.findById(id).isEmpty()) {
             return ResponseObject.message("There Aren't any user with the requested Id");
         }
         User user = userRepository.findById(id).get();

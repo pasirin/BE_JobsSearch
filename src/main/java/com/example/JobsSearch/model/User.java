@@ -1,5 +1,6 @@
 package com.example.JobsSearch.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
@@ -21,6 +22,8 @@ public class User {
 
     @NotNull
     private String username;
+
+    @JsonIgnore
     @NotNull
     private String password;
     @NotNull

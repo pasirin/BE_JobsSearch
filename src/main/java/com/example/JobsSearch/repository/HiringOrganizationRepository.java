@@ -9,4 +9,7 @@ public interface HiringOrganizationRepository extends JpaRepository<HiringOrgani
     Boolean existsByName(String name);
 
     Optional<HiringOrganization> findByUserId(Long id);
+
+    Optional<HiringOrganization> findById(Long id);
+
 }
