@@ -1,6 +1,7 @@
 package com.example.JobsSearch.controller;
 
 import com.example.JobsSearch.model.HiringOrganization;
+import com.example.JobsSearch.payload.Request.HrUpdateProfileRequest;
 import com.example.JobsSearch.payload.Response.ResponseObject;
 import com.example.JobsSearch.security.UserDetailsImpl;
 import com.example.JobsSearch.service.impl.HiringOrganizationService;
@@ -31,4 +32,11 @@ public class HiringOrganizationController {
                 : ResponseEntity.badRequest().body(output.getMessage());
     }
 
+    @PutMapping("/update-profile")
+    public ResponseEntity<?> updateHrProfile(@RequestBody HrUpdateProfileRequest hrUpdateProfileRequest) {
+        ResponseObject output = hiringOrganizationService.updateProfile(SecurityContextHolder.getContext().getAuthentication(), hrUpdateProfileRequest);
+        return output.getStatus()
+                ? ResponseEntity.ok().body(output.getData())
+                : ResponseEntity.badRequest().body(output.getMessage());
+    }
 }
