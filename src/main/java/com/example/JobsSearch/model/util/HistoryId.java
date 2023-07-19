@@ -2,18 +2,24 @@ package com.example.JobsSearch.model.util;
 
 import com.example.JobsSearch.model.Job;
 import com.example.JobsSearch.model.Seeker;
+import lombok.Data;
 
 import javax.persistence.Embeddable;
 import javax.persistence.ManyToOne;
 import java.io.Serializable;
 
 @Embeddable
-public class SeekerJobId implements Serializable {
+public class HistoryId implements Serializable {
     @ManyToOne
     private Seeker seeker;
 
     @ManyToOne
     private Job job;
+
+    public HistoryId(Seeker seeker, Job job) {
+        this.seeker = seeker;
+        this.job = job;
+    }
 
     public Seeker getSeeker() {
         return seeker;

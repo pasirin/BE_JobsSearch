@@ -1,6 +1,7 @@
 package com.example.JobsSearch.model;
 
-import com.example.JobsSearch.model.util.SeekerJobId;
+import com.example.JobsSearch.model.util.HistoryId;
+import com.example.JobsSearch.models.util.InteractionType;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -19,7 +20,7 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 public class History {
     @EmbeddedId
-    private SeekerJobId primaryKey;
+    private HistoryId primaryKey;
 
     @CreatedDate
     private LocalDateTime createdAt;
@@ -27,17 +28,16 @@ public class History {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
+    @Enumerated(EnumType.STRING)
+    private InteractionType interactionType;
 
-    private Integer action;
-
-    public History(SeekerJobId primaryKey, LocalDateTime createdAt, LocalDateTime updatedAt, Integer action) {
-        this.primaryKey = primaryKey;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.action = action;
-    }
 
     public History() {
+    }
+
+    public History(HistoryId historyId, InteractionType interactionType) {
+        this.primaryKey = historyId;
+        this.interactionType = interactionType;
     }
 
     public LocalDateTime getUpdatedAt() {
@@ -48,7 +48,7 @@ public class History {
         this.updatedAt = updatedAt;
     }
 
-    public SeekerJobId getPrimaryKey() {
+    public HistoryId getPrimaryKey() {
         return primaryKey;
     }
 
@@ -62,7 +62,7 @@ public class History {
         return getPrimaryKey().getJob();
     }
 
-    public void setPrimaryKey(SeekerJobId primaryKey) {
+    public void setPrimaryKey(HistoryId primaryKey) {
         this.primaryKey = primaryKey;
     }
 
@@ -72,14 +72,6 @@ public class History {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
-    }
-
-    public Integer getAction() {
-        return action;
-    }
-
-    public void setAction(Integer action) {
-        this.action = action;
     }
 
 }

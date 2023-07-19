@@ -27,6 +27,7 @@ public class HiringOrganization {
 
     private String introduction;
 
+    @Enumerated(EnumType.STRING)
     private OrganizationType organizationType;
 
     public HiringOrganization() {
