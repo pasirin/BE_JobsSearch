@@ -80,4 +80,21 @@ public class AuthController {
         ? ResponseEntity.ok().build()
         : ResponseEntity.badRequest().body(output.getMessage());
   }
+
+  @PostMapping("/forgot-password")
+  public ResponseEntity<?> forgotPassword(@Valid @RequestParam String email) {
+    ResponseObject output = authService.updateResetPasswordToken(email);
+    return output.getStatus()
+        ? ResponseEntity.ok().build()
+        : ResponseEntity.badRequest().body(output.getMessage());
+  }
+
+  @PostMapping("/reset-password")
+  public ResponseEntity<?> resetPassword(
+      @Valid @RequestParam String token, @RequestParam String newPassword) {
+    ResponseObject output = authService.resetPassword(token, newPassword);
+    return output.getStatus()
+        ? ResponseEntity.ok().build()
+        : ResponseEntity.badRequest().body(output.getMessage());
+  }
 }

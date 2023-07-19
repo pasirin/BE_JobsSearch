@@ -1,4 +1,4 @@
-package com.example.JobsSearch.service;
+package com.example.JobsSearch.service.impl;
 
 import com.cloudinary.Cloudinary;
 import lombok.RequiredArgsConstructor;

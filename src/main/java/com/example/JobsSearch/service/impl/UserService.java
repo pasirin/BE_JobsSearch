@@ -10,7 +10,9 @@ import com.example.JobsSearch.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.servlet.Servlet;
 import javax.swing.text.html.Option;
 import java.util.Collection;
 import java.util.List;

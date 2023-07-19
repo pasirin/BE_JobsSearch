@@ -5,17 +5,12 @@ import com.example.JobsSearch.payload.Request.SeekerUpdateRequest;
 import com.example.JobsSearch.payload.Response.ResponseObject;
 import com.example.JobsSearch.repository.SeekerRepository;
 import com.example.JobsSearch.repository.UserRepository;
-import com.example.JobsSearch.service.ImageUploadService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.OptionalInt;
 
 @Service
 public class SeekerService {
