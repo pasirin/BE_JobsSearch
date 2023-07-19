@@ -37,7 +37,7 @@ public class AuthController {
   public ResponseEntity<?> register(@RequestBody SeekerSignupRequest seekerSignupRequest) {
     ResponseObject output = authService.seekerSignup(seekerSignupRequest);
     return output.getStatus()
-        ? ResponseEntity.ok(output.getData())
+        ? ResponseEntity.ok().build()
         : ResponseEntity.badRequest().body(output.getMessage());
   }
 
@@ -45,7 +45,7 @@ public class AuthController {
   public ResponseEntity<?> hrRegister(@RequestBody HrSignupRequest hrSignupRequest) {
     ResponseObject output = authService.hrSignup(hrSignupRequest);
     return output.getStatus()
-        ? ResponseEntity.ok(output.getData())
+        ? ResponseEntity.ok().build()
         : ResponseEntity.badRequest().body(output.getMessage());
   }
 

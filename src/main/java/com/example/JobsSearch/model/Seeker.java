@@ -63,23 +63,6 @@ public class Seeker {
         this.achievements = achievements;
         this.other_details = other_details;
     }
-
-    public String getPhoto() {
-        return photo;
-    }
-
-    public void setPhoto(String photo) {
-        this.photo = photo;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
     @Transient
     public String getEmail() {
         return user.getEmail();
@@ -88,85 +71,5 @@ public class Seeker {
     @Transient
     public void setEmail(String email) {
         user.setEmail(email);
-    }
-
-    public String getPhone_number() {
-        return phone_number;
-    }
-
-    public void setPhone_number(String phone_number) {
-        this.phone_number = phone_number;
-    }
-
-    public Date getDob() {
-        return dob;
-    }
-
-    public void setDob(Date dob) {
-        this.dob = dob;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getWebsite() {
-        return website;
-    }
-
-    public void setWebsite(String website) {
-        this.website = website;
-    }
-
-    public String getEducation() {
-        return education;
-    }
-
-    public void setEducation(String education) {
-        this.education = education;
-    }
-
-    public String getExperience() {
-        return experience;
-    }
-
-    public void setExperience(String experience) {
-        this.experience = experience;
-    }
-
-    public String getSkills() {
-        return skills;
-    }
-
-    public void setSkills(String skills) {
-        this.skills = skills;
-    }
-
-    public String getAchievements() {
-        return achievements;
-    }
-
-    public void setAchievements(String achievements) {
-        this.achievements = achievements;
-    }
-
-    public String getOther_details() {
-        return other_details;
-    }
-
-    public void setOther_details(String other_details) {
-        this.other_details = other_details;
-    }
-
-    public Set<History> getHistories() {
-        return histories;
-    }
-
-    public void setHistories(Set<History> histories) {
-        this.histories = histories;
     }
 }
