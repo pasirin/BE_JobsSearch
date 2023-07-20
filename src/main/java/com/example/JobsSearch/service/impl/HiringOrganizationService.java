@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -23,7 +24,7 @@ public class HiringOrganizationService implements IHiringOrganizationService {
     HiringOrganizationRepository hiringOrganizationRepository;
 
     @Override
-    public List<HiringOrganization> getAll() {
+    public Collection<HiringOrganization> getAll() {
         return hiringOrganizationRepository.findAll();
     }
 

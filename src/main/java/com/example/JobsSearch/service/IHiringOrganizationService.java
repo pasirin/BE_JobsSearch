@@ -5,11 +5,11 @@ import com.example.JobsSearch.payload.Request.HrUpdateProfileRequest;
 import com.example.JobsSearch.payload.Response.ResponseObject;
 import org.springframework.security.core.Authentication;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface IHiringOrganizationService {
-    List<HiringOrganization> getAll();
-
+    Collection<HiringOrganization> getAll();
     ResponseObject getProfile(Long id);
 
     ResponseObject getById(Long id);

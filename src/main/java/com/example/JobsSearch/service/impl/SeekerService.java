@@ -5,6 +5,8 @@ import com.example.JobsSearch.payload.Request.SeekerUpdateRequest;
 import com.example.JobsSearch.payload.Response.ResponseObject;
 import com.example.JobsSearch.repository.SeekerRepository;
 import com.example.JobsSearch.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,6 +16,8 @@ import java.util.Collection;
 
 @Service
 public class SeekerService {
+  private static final Logger logger = LoggerFactory.getLogger(SeekerService.class);
+
   @Autowired SeekerRepository seekerRepository;
 
   @Autowired
@@ -70,7 +74,8 @@ public class SeekerService {
       try {
         String result = imageUploadService.deleteImage(seeker.getPhoto());
       } catch (IOException e) {
-        throw new RuntimeException("Failed to delete the previous profile photo of user id: " + seeker.getId());
+        logger.error(String.valueOf(e));
+        return ResponseObject.message("Failed to delete the previous profile photo of user");
       }
     }
     String profilePictureUrl;
@@ -78,6 +83,7 @@ public class SeekerService {
       try {
         profilePictureUrl = imageUploadService.uploadImage(image);
       } catch (IOException e) {
+        logger.error(String.valueOf(e));
         return ResponseObject.message(e.toString());
       }
       seeker.setPhoto(profilePictureUrl);

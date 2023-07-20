@@ -1,14 +1,13 @@
 package com.example.JobsSearch.controller;
 
 import com.example.JobsSearch.payload.Request.NewsRequest;
+import com.example.JobsSearch.payload.Request.SearchLabelRequest;
 import com.example.JobsSearch.payload.Response.ResponseObject;
-import com.example.JobsSearch.service.impl.HiringOrganizationService;
-import com.example.JobsSearch.service.impl.NewsService;
-import com.example.JobsSearch.service.impl.SeekerService;
-import com.example.JobsSearch.service.impl.UserService;
+import com.example.JobsSearch.service.impl.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -24,6 +23,8 @@ public class AdminController {
   @Autowired SeekerService seekerService;
 
   @Autowired HiringOrganizationService hiringOrganizationService;
+
+  @Autowired SearchLabelService searchLabelService;
 
   // Seeker Managing Section
 
@@ -130,10 +131,41 @@ public class AdminController {
         : ResponseEntity.badRequest().body(output.getMessage());
   }
 
-  @PostMapping("/news/{id}")
+  @PutMapping("/news/{id}")
   public ResponseEntity<?> changeNews(
       @Valid @PathVariable Long id, @RequestBody NewsRequest newsRequest) {
     ResponseObject output = newsService.update(id, newsRequest);
+    return output.getStatus()
+        ? ResponseEntity.ok().build()
+        : ResponseEntity.badRequest().body(output.getMessage());
+  }
+
+  // Search label section
+  @PostMapping("/tag-search/add")
+  public ResponseEntity<?> createSearchLabel(SearchLabelRequest searchLabelRequest) {
+    ResponseObject output = searchLabelService.create(searchLabelRequest);
+    return output.getStatus()
+        ? ResponseEntity.ok().build()
+        : ResponseEntity.badRequest().body(output.getMessage());
+  }
+
+  @GetMapping("/tag-search/{id}")
+  public ResponseEntity<?> getLabelById(@Valid @PathVariable Long id) {
+    return ResponseEntity.ok().body(searchLabelService.getById(id));
+  }
+
+  @DeleteMapping("/tag-search/{id}")
+  public ResponseEntity<?> deleteLabelById(@Valid @PathVariable Long id) {
+    ResponseObject output = searchLabelService.delete(id);
+    return output.getStatus()
+        ? ResponseEntity.ok().build()
+        : ResponseEntity.badRequest().body(output.getMessage());
+  }
+
+  @PutMapping("/tag-search/{id}")
+  public ResponseEntity<?> updateSearchLabel(
+      @Valid @PathVariable Long id, @RequestBody SearchLabelRequest searchLabelRequest) {
+    ResponseObject output = searchLabelService.update(id, searchLabelRequest);
     return output.getStatus()
         ? ResponseEntity.ok().build()
         : ResponseEntity.badRequest().body(output.getMessage());
