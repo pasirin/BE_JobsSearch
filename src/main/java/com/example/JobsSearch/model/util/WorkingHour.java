@@ -10,7 +10,7 @@ import java.time.LocalTime;
 
 @Data
 @Entity
-public class WorkTime {
+public class WorkingHour {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

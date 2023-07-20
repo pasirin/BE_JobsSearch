@@ -1,5 +1,6 @@
 package com.example.JobsSearch.model;
 
+import com.example.JobsSearch.model.util.ERole;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sun.istack.NotNull;
@@ -30,13 +31,15 @@ public class User {
     @NotNull
     @JsonIgnore
     private String password;
-    @NotNull
-    private String role;
+
+    @Enumerated(EnumType.STRING)
+    private ERole role;
 
     @Email
     private String email;
 
-    @Setter @Getter
+    @Setter
+    @Getter
     private String resetPasswordToken;
 
     @CreatedDate
@@ -50,14 +53,14 @@ public class User {
     public User() {
     }
 
-    public User(String username, String password, String role) {
+    public User(String username, String password, ERole role) {
         this.username = username;
         this.password = password;
         this.role = role;
     }
 
 
-    public User(String username, String password, String role, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public User(String username, String password, ERole role, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.username = username;
         this.password = password;
         this.role = role;
@@ -89,13 +92,6 @@ public class User {
         this.password = password;
     }
 
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
