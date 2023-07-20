@@ -40,6 +40,7 @@ public class User {
 
     @Setter
     @Getter
+    @JsonIgnore
     private String resetPasswordToken;
 
     @CreatedDate

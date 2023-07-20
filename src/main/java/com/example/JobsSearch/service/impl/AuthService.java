@@ -15,9 +15,11 @@ import com.example.JobsSearch.repository.UserRepository;
 import com.example.JobsSearch.security.JwtTokenProvider;
 import com.example.JobsSearch.security.UserDetailsImpl;
 import net.bytebuddy.utility.RandomString;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.event.EventListener;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -39,27 +41,27 @@ import java.util.stream.Collectors;
 
 @Service
 public class AuthService {
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private SeekerRepository seekerRepository;
-    @Autowired
-    private HiringOrganizationRepository hiringOrganizationRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private JwtTokenProvider jwtTokenProvider;
+  private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
+  @Autowired private UserRepository userRepository;
+  @Autowired private SeekerRepository seekerRepository;
+  @Autowired private HiringOrganizationRepository hiringOrganizationRepository;
+  @Autowired private PasswordEncoder passwordEncoder;
+  @Autowired private JwtTokenProvider jwtTokenProvider;
+  @Autowired AuthenticationManager authenticationManager;
 
-    @Autowired
-    AuthenticationManager authenticationManager;
+  @Value("${app.admin.username}")
+  private String adminUsername;
 
-    @EventListener
-    public void initAdmin(ApplicationReadyEvent event) {
-        if (!userRepository.existsByUsername("secretadmin")) {
-            User user = new User("secretadmin", passwordEncoder.encode("job-seek-pro"), ERole.ADMIN);
-            userRepository.save(user);
-        }
+  @Value("${app.admin.password}")
+  private String adminPassword;
+
+  @EventListener
+  public void initAdmin(ApplicationReadyEvent event) {
+    if (!userRepository.existsByUsername(adminUsername)) {
+      User user = new User(adminUsername, passwordEncoder.encode(adminPassword), ERole.ROLE_ADMIN);
+      userRepository.save(user);
     }
+  }
 
     public JwtResponse login(LoginRequest loginRequest) {
         Authentication authentication =
@@ -87,7 +89,7 @@ public class AuthService {
                 new User(
                         seekerSignupRequest.getUsername(),
                         passwordEncoder.encode(seekerSignupRequest.getPassword()),
-                        ERole.SEEKER);
+                        ERole.ROLE_SEEKER);
 
         // Lưu user vào cơ sở dữ liệu
         userRepository.save(user);
@@ -108,7 +110,7 @@ public class AuthService {
         user.setUsername(hrSignupRequest.getUsername());
         user.setPassword(passwordEncoder.encode(hrSignupRequest.getPassword()));
         user.setEmail(hrSignupRequest.getEmail());
-        user.setRole(ERole.HR);
+        user.setRole(ERole.ROLE_HR);
         userRepository.save(user);
         HiringOrganization hiringOrganization =
                 new HiringOrganization(
@@ -155,21 +157,22 @@ public class AuthService {
         return ResponseObject.ok();
     }
 
-    public ResponseObject updateResetPasswordToken(String email) {
-        String token = RandomString.make(30);
-        if (userRepository.findByEmail(email).isEmpty()) {
-            return ResponseObject.message("There Aren't any user with the requested Email");
-        }
-        User user = userRepository.findByEmail(email).get();
-        user.setResetPasswordToken(token);
-        userRepository.save(user);
-        try {
-            sendEmail(email, token);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        return ResponseObject.ok();
+  public ResponseObject updateResetPasswordToken(String email) {
+    String token = RandomString.make(30);
+    if (userRepository.findByEmail(email).isEmpty()) {
+      return ResponseObject.message("There Aren't any user with the requested Email");
     }
+    User user = userRepository.findByEmail(email).get();
+    user.setResetPasswordToken(token);
+    userRepository.save(user);
+    try {
+      sendEmail(email, token);
+    } catch (Exception e) {
+      logger.error(String.valueOf(e));
+      return ResponseObject.message(e.toString());
+    }
+    return ResponseObject.ok();
+  }
 
     public ResponseObject resetPassword(String token, String newPassword) {
         if (userRepository.findByResetPasswordToken(token).isEmpty()) {
@@ -207,14 +210,18 @@ public class AuthService {
         mailSender.send(message);
     }
 
-    public JavaMailSender getJavaMailSender() {
-        JavaMailSenderImpl mailSender1 = new JavaMailSenderImpl();
-        mailSender1.setHost("LAPTOP-V2740JPE");
-        mailSender1.setPort(25);
+  public JavaMailSender getJavaMailSender() {
+    JavaMailSenderImpl mailSender1 = new JavaMailSenderImpl();
+    mailSender1.setHost("smtp.gmail.com");
+    mailSender1.setPort(587);
 
-        Properties props = mailSender1.getJavaMailProperties();
-        props.put("mail.transport.protocol", "smtp");
-        props.put("mail.smtp.starttls.enable", "true");
+    mailSender1.setUsername("duongdungnhan1@gmail.com");
+    mailSender1.setPassword("fctiybxphpkroftf");
+
+    Properties props = mailSender1.getJavaMailProperties();
+    props.put("mail.transport.protocol", "smtp");
+    props.put("mail.smtp.auth", "true");
+    props.put("mail.smtp.starttls.enable", "true");
 
         return mailSender1;
     }

@@ -21,61 +21,59 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig {
-    @Autowired
-    UserDetailServiceImpl userDetailsService;
+  @Autowired UserDetailServiceImpl userDetailsService;
 
-    @Autowired
-    private AuthEntryPointJwt authEntryPointJwt;
+  @Autowired private AuthEntryPointJwt authEntryPointJwt;
 
-    @Bean
-    public JwtAuthenticationFilter authenticationJwtTokenFilter() {
-        return new JwtAuthenticationFilter();
-    }
+  @Bean
+  public JwtAuthenticationFilter authenticationJwtTokenFilter() {
+    return new JwtAuthenticationFilter();
+  }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
 
-    @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+  @Bean
+  public DaoAuthenticationProvider authenticationProvider() {
+    DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
 
-        authenticationProvider.setUserDetailsService(userDetailsService);
-        authenticationProvider.setPasswordEncoder(passwordEncoder());
+    authenticationProvider.setUserDetailsService(userDetailsService);
+    authenticationProvider.setPasswordEncoder(passwordEncoder());
 
-        return authenticationProvider;
-    }
+    return authenticationProvider;
+  }
 
-    @Bean
-    public AuthenticationManager authenticationManager(
-            AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
-    }
+  @Bean
+  public AuthenticationManager authenticationManager(
+      AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    return authenticationConfiguration.getAuthenticationManager();
+  }
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable)
-                .exceptionHandling(exception -> exception.authenticationEntryPoint(authEntryPointJwt))
-                .sessionManagement(
-                        session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(
-                        auth ->
-                                auth.antMatchers("/admin/**").hasRole("ADMIN")
-                                        .antMatchers("/auth/**").permitAll()
-                                        .antMatchers("/**").permitAll()
-                                        .anyRequest()
-                                        .authenticated())
-                .logout().logoutUrl("/logout") // Đường dẫn cho yêu cầu đăng xuất
-                .logoutSuccessUrl("/login") // Đường dẫn chuyển hướng sau khi đăng xuất thành công
-                .invalidateHttpSession(true) // Hủy bỏ phiên làm việc hiện tại
-                .deleteCookies() // Xóa cookie của phiên làm việc
-                .permitAll();
+  @Bean
+  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    http.csrf(AbstractHttpConfigurer::disable)
+        .exceptionHandling(exception -> exception.authenticationEntryPoint(authEntryPointJwt))
+        .sessionManagement(
+            session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .authorizeHttpRequests(
+            auth ->
+                auth.antMatchers("/admin/**")
+                    .hasRole("ADMIN")
+                    .antMatchers("/auth/**")
+                    .permitAll()
+                    .antMatchers("/seeker/**")
+                    .hasRole("SEEKER")
+                    .antMatchers("/organizations/**")
+                    .hasRole("HR")
+                    .anyRequest()
+                    .authenticated());
 
-        http.authenticationProvider(authenticationProvider());
-        http.addFilterBefore(
-                authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+    http.authenticationProvider(authenticationProvider());
+    http.addFilterBefore(
+        authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
-        return http.build();
-    }
+    return http.build();
+  }
 }

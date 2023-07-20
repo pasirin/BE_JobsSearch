@@ -1,7 +1,7 @@
 package com.example.JobsSearch.model.util;
 
 public enum ERole {
-    HR,
-    ADMIN,
-    SEEKER
+    ROLE_HR,
+    ROLE_ADMIN,
+    ROLE_SEEKER
 }

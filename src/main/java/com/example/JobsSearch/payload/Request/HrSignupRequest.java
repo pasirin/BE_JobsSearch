@@ -10,8 +10,10 @@ public class HrSignupRequest {
     @NotBlank
     private String password;
 
+    @NotBlank
     private String name;
 
+    @NotBlank
     private String email;
 
     private String phone_number;
