@@ -2,6 +2,7 @@ package com.example.JobsSearch.payload.Request;
 
 import com.example.JobsSearch.model.util.OrganizationType;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 public class HrSignupRequest {
@@ -14,6 +15,7 @@ public class HrSignupRequest {
     private String name;
 
     @NotBlank
+    @Email
     private String email;
 
     @NotBlank

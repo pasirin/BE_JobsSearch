@@ -4,6 +4,7 @@ import com.example.JobsSearch.model.HiringOrganization;
 import com.example.JobsSearch.model.Seeker;
 import com.example.JobsSearch.model.User;
 import com.example.JobsSearch.model.util.ERole;
+import com.example.JobsSearch.model.util.OrganizationType;
 import com.example.JobsSearch.payload.Request.HrSignupRequest;
 import com.example.JobsSearch.payload.Request.LoginRequest;
 import com.example.JobsSearch.payload.Request.SeekerSignupRequest;
@@ -37,31 +38,39 @@ import javax.mail.internet.MimeMessage;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
 public class AuthService {
-  private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
-  @Autowired private UserRepository userRepository;
-  @Autowired private SeekerRepository seekerRepository;
-  @Autowired private HiringOrganizationRepository hiringOrganizationRepository;
-  @Autowired private PasswordEncoder passwordEncoder;
-  @Autowired private JwtTokenProvider jwtTokenProvider;
-  @Autowired AuthenticationManager authenticationManager;
+    private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private SeekerRepository seekerRepository;
+    @Autowired
+    private HiringOrganizationRepository hiringOrganizationRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
+    @Autowired
+    AuthenticationManager authenticationManager;
 
-  @Value("${app.admin.username}")
-  private String adminUsername;
+    @Value("${app.admin.username}")
+    private String adminUsername;
 
-  @Value("${app.admin.password}")
-  private String adminPassword;
+    @Value("${app.admin.password}")
+    private String adminPassword;
 
-  @EventListener
-  public void initAdmin(ApplicationReadyEvent event) {
-    if (!userRepository.existsByUsername(adminUsername)) {
-      User user = new User(adminUsername, passwordEncoder.encode(adminPassword), ERole.ROLE_ADMIN);
-      userRepository.save(user);
+    @EventListener
+    public void initAdmin(ApplicationReadyEvent event) {
+        if (!userRepository.existsByUsername(adminUsername)) {
+            User user = new User(adminUsername, passwordEncoder.encode(adminPassword), ERole.ROLE_ADMIN);
+            userRepository.save(user);
+        }
     }
-  }
 
     public JwtResponse login(LoginRequest loginRequest) {
         Authentication authentication =
@@ -79,10 +88,40 @@ public class AuthService {
         return new JwtResponse(jwt, userDetails.getId(), userDetails.getUsername(), roles);
     }
 
+    public ResponseObject loginNew(LoginRequest loginRequest) {
+        Authentication authentication =
+                authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(
+                                loginRequest.getUsername(), loginRequest.getPassword()));
+        if (authentication == null) {
+            return new ResponseObject(false, "Sai tài khoản hoặc mật khẩu", "");
+        }
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = jwtTokenProvider.generateJwtToken(authentication);
+
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        List<String> roles =
+                userDetails.getAuthorities().stream()
+                        .map(GrantedAuthority::getAuthority)
+                        .collect(Collectors.toList());
+        return new ResponseObject(true, jwt, userDetails);
+    }
+
+    public static boolean isPasswordValid(String password) {
+        String PASSWORD_PATTERN =
+                "^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*(),.?\":{}|<>])[A-Za-z0-9!@#$%^&*(),.?\":{}|<>]{8,}$";
+        Pattern pattern = Pattern.compile(PASSWORD_PATTERN);
+        Matcher matcher = pattern.matcher(password);
+        return matcher.matches();
+    }
+
     public ResponseObject seekerSignup(SeekerSignupRequest seekerSignupRequest) {
         // Kiểm tra username đã tồn tại chưa
         if (userRepository.existsByUsername(seekerSignupRequest.getUsername())) {
             return ResponseObject.message("Username already taken");
+        }
+        if (!isPasswordValid(seekerSignupRequest.getPassword())) {
+            return ResponseObject.message("Mật khẩu phải tuân thủ nguyên tắc có ít nhất 8 ký tự, chứa ít nhất 1 ký tự viết hoa, 1 ký tự số, 1 ký tự đặc biệt");
         }
         // Tạo đối tượng User từ thông tin đăng ký
         User user =
@@ -106,23 +145,28 @@ public class AuthService {
         if (hiringOrganizationRepository.existsByName(hrSignupRequest.getName())) {
             return ResponseObject.message("Company Name Already Taken");
         }
+        if (!isPasswordValid(hrSignupRequest.getPassword())) {
+            return ResponseObject.message("Mật khẩu phải tuân thủ nguyên tắc có ít nhất 8 ký tự, chứa ít nhất 1 ký tự viết hoa, 1 ký tự số, 1 ký tự đặc biệt");
+        }
+        if (!userRepository.findByEmail(hrSignupRequest.getEmail()).isEmpty()) {
+            return ResponseObject.message("Email đã tồn tại trong cơ sở dữ liệu.");
+        }
         User user = new User();
         user.setUsername(hrSignupRequest.getUsername());
         user.setPassword(passwordEncoder.encode(hrSignupRequest.getPassword()));
         user.setEmail(hrSignupRequest.getEmail());
         user.setRole(ERole.ROLE_HR);
         userRepository.save(user);
-        HiringOrganization hiringOrganization =
-                new HiringOrganization(
-                        user,
-                        hrSignupRequest.getName(),
-                        hrSignupRequest.getPhone_number(),
-                        hrSignupRequest.getWebsite(),
-                        hrSignupRequest.getAddress(),
-                        hrSignupRequest.getIntroduction(),
-                        hrSignupRequest.getOrganizationType());
-        hiringOrganizationRepository.save(hiringOrganization);
 
+        HiringOrganization hiringOrganization = new HiringOrganization();
+        hiringOrganization.setUser(user);
+        hiringOrganization.setName(hrSignupRequest.getName());
+        hiringOrganization.setPhone_number(hrSignupRequest.getPhone_number());
+        hiringOrganization.setWebsite(hrSignupRequest.getWebsite());
+        hiringOrganization.setAddress(hrSignupRequest.getAddress());
+        hiringOrganization.setIntroduction(hrSignupRequest.getIntroduction());
+
+        hiringOrganizationRepository.save(hiringOrganization);
         return ResponseObject.status(true).setData(hiringOrganization);
     }
 
@@ -157,22 +201,22 @@ public class AuthService {
         return ResponseObject.ok();
     }
 
-  public ResponseObject updateResetPasswordToken(String email) {
-    String token = RandomString.make(30);
-    if (userRepository.findByEmail(email).isEmpty()) {
-      return ResponseObject.message("There Aren't any user with the requested Email");
+    public ResponseObject updateResetPasswordToken(String email) {
+        String token = RandomString.make(30);
+        if (userRepository.findByEmail(email).isEmpty()) {
+            return ResponseObject.message("There Aren't any user with the requested Email");
+        }
+        User user = userRepository.findByEmail(email).get();
+        user.setResetPasswordToken(token);
+        userRepository.save(user);
+        try {
+            sendEmail(email, token);
+        } catch (Exception e) {
+            logger.error(String.valueOf(e));
+            return ResponseObject.message(e.toString());
+        }
+        return ResponseObject.ok();
     }
-    User user = userRepository.findByEmail(email).get();
-    user.setResetPasswordToken(token);
-    userRepository.save(user);
-    try {
-      sendEmail(email, token);
-    } catch (Exception e) {
-      logger.error(String.valueOf(e));
-      return ResponseObject.message(e.toString());
-    }
-    return ResponseObject.ok();
-  }
 
     public ResponseObject resetPassword(String token, String newPassword) {
         if (userRepository.findByResetPasswordToken(token).isEmpty()) {
@@ -210,18 +254,18 @@ public class AuthService {
         mailSender.send(message);
     }
 
-  public JavaMailSender getJavaMailSender() {
-    JavaMailSenderImpl mailSender1 = new JavaMailSenderImpl();
-    mailSender1.setHost("smtp.gmail.com");
-    mailSender1.setPort(587);
+    public JavaMailSender getJavaMailSender() {
+        JavaMailSenderImpl mailSender1 = new JavaMailSenderImpl();
+        mailSender1.setHost("smtp.gmail.com");
+        mailSender1.setPort(587);
 
-    mailSender1.setUsername("duongdungnhan1@gmail.com");
-    mailSender1.setPassword("fctiybxphpkroftf");
+        mailSender1.setUsername("duongdungnhan1@gmail.com");
+        mailSender1.setPassword("fctiybxphpkroftf");
 
-    Properties props = mailSender1.getJavaMailProperties();
-    props.put("mail.transport.protocol", "smtp");
-    props.put("mail.smtp.auth", "true");
-    props.put("mail.smtp.starttls.enable", "true");
+        Properties props = mailSender1.getJavaMailProperties();
+        props.put("mail.transport.protocol", "smtp");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
 
         return mailSender1;
     }

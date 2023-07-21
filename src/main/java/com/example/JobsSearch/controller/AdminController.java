@@ -69,7 +69,7 @@ public class AdminController {
     return ResponseEntity.ok().body(hiringOrganizationService.getByName(s));
   }
 
-  @GetMapping("/{organizationId}")
+  @GetMapping("/organizations/organizationId}")
   public ResponseEntity<?> getById(@Valid @PathVariable Long organizationId) {
     ResponseObject output = hiringOrganizationService.getById(organizationId);
     return output.getStatus()
@@ -77,11 +77,11 @@ public class AdminController {
         : ResponseEntity.badRequest().body(output.getMessage());
   }
 
-  @DeleteMapping("/{organizationId}")
+  @DeleteMapping("/organizations/{organizationId}")
   public ResponseEntity<?> delete(@Valid @PathVariable Long organizationId) {
     ResponseObject output = hiringOrganizationService.delete(organizationId);
     return output.getStatus()
-        ? ResponseEntity.ok().body(output.getData())
+        ? ResponseEntity.ok().build()
         : ResponseEntity.badRequest().body(output.getMessage());
   }
 

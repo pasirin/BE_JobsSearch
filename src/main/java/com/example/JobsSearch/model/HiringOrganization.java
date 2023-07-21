@@ -33,6 +33,9 @@ public class HiringOrganization {
     public HiringOrganization() {
     }
 
+    public HiringOrganization(User user) {
+        this.user = user;
+    }
     public HiringOrganization(User user, String name, String phone_number, String website, String address, String introduction, OrganizationType organizationType) {
         this.user = user;
         this.name = name;
