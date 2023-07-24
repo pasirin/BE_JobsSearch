@@ -3,6 +3,7 @@ package com.example.JobsSearch.model;
 import com.example.JobsSearch.model.util.HistoryId;
 import com.example.JobsSearch.models.util.InteractionType;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
         @AssociationOverride(name = "primaryKey.seeker", joinColumns = @JoinColumn(name = "seekerId")),
         @AssociationOverride(name = "primaryKey.job", joinColumns = @JoinColumn(name = "jobId"))
 })
+@NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 public class History {
     @EmbeddedId
@@ -31,9 +33,6 @@ public class History {
     @Enumerated(EnumType.STRING)
     private InteractionType interactionType;
 
-
-    public History() {
-    }
 
     public History(HistoryId historyId, InteractionType interactionType) {
         this.primaryKey = historyId;

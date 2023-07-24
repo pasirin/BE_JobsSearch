@@ -4,4 +4,5 @@ import com.example.JobsSearch.model.util.Location;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface LocationRepository extends JpaRepository<Location, Long> {
+  Boolean existsByCity(String city);
 }

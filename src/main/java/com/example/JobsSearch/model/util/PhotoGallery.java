@@ -21,8 +21,7 @@ public class PhotoGallery {
         this.id = id;
     }
 
-    public PhotoGallery(Long id, List<Image> contents, Boolean isDisplayed) {
-        this.id = id;
+    public PhotoGallery(List<Image> contents, Boolean isDisplayed) {
         this.contents = contents;
         this.isDisplayed = isDisplayed;
     }

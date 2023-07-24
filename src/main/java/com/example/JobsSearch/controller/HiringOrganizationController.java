@@ -2,16 +2,26 @@ package com.example.JobsSearch.controller;
 
 import com.example.JobsSearch.model.HiringOrganization;
 import com.example.JobsSearch.payload.Request.HrUpdateProfileRequest;
+import com.example.JobsSearch.payload.Request.JobRequest;
 import com.example.JobsSearch.payload.Response.ResponseObject;
 import com.example.JobsSearch.security.UserDetailsImpl;
 import com.example.JobsSearch.service.impl.HiringOrganizationService;
+import com.example.JobsSearch.service.impl.JobService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.time.LocalTime;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -19,24 +29,51 @@ import java.util.Optional;
 @PreAuthorize("hasRole('ROLE_HR')")
 public class HiringOrganizationController {
 
-    @Autowired
-    HiringOrganizationService hiringOrganizationService;
+  @Autowired HiringOrganizationService hiringOrganizationService;
 
-    @GetMapping("/profile")
-    public ResponseEntity<?> getProfile() {
-        UserDetailsImpl userDetails =
-                (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        ResponseObject output = hiringOrganizationService.getProfile(userDetails.getId());
-        return output.getStatus()
-                ? ResponseEntity.ok().body(output.getData())
-                : ResponseEntity.badRequest().body(output.getMessage());
-    }
+  @Autowired JobService jobService;
 
-    @PutMapping("/update-profile")
-    public ResponseEntity<?> updateHrProfile(@RequestBody HrUpdateProfileRequest hrUpdateProfileRequest) {
-        ResponseObject output = hiringOrganizationService.updateProfile(SecurityContextHolder.getContext().getAuthentication(), hrUpdateProfileRequest);
-        return output.getStatus()
-                ? ResponseEntity.ok().body(output.getData())
-                : ResponseEntity.badRequest().body(output.getMessage());
+  @GetMapping("/profile")
+  public ResponseEntity<?> getProfile() {
+    UserDetailsImpl userDetails =
+        (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    ResponseObject output = hiringOrganizationService.getProfile(userDetails.getId());
+    return output.getStatus()
+        ? ResponseEntity.ok().body(output.getData())
+        : ResponseEntity.badRequest().body(output.getMessage());
+  }
+
+  @PutMapping("/update-profile")
+  public ResponseEntity<?> updateHrProfile(
+      @RequestBody HrUpdateProfileRequest hrUpdateProfileRequest) {
+    ResponseObject output =
+        hiringOrganizationService.updateProfile(
+            SecurityContextHolder.getContext().getAuthentication(), hrUpdateProfileRequest);
+    return output.getStatus()
+        ? ResponseEntity.ok().body(output.getData())
+        : ResponseEntity.badRequest().body(output.getMessage());
+  }
+
+  @PostMapping(value = "/add/jobs")
+  public ResponseEntity<?> createJob(
+      @RequestPart String jobRequestString,
+      @RequestPart(required = false) MultipartFile mainImages,
+      @RequestPart(required = false) List<MultipartFile> subImage,
+      @RequestPart(required = false) List<MultipartFile> gallery) {
+    UserDetailsImpl userDetails =
+        (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    JobRequest jobRequest = new JobRequest();
+    try {
+      ObjectMapper objectMapper = new ObjectMapper();
+      objectMapper.registerModule(new JavaTimeModule());
+      jobRequest = objectMapper.readValue(jobRequestString, JobRequest.class);
+    } catch (Exception err) {
+      System.out.println("Error: " + err);
     }
+    ResponseObject output =
+        jobService.create(userDetails.getId(), jobRequest, mainImages, subImage, gallery);
+    return output.getStatus()
+        ? ResponseEntity.ok().build()
+        : ResponseEntity.badRequest().body(output.getMessage());
+  }
 }

@@ -14,6 +14,7 @@ public class Salary {
     private Double daily;
     private Double hourly;
     private Double monthly;
+    // Type Code Base Ex (0->none, 1 -> daily, 2->hourly, 3-> monthly, 4-> daily & hourly, ....)
     private Integer type;
 
     private String dailyText = "";

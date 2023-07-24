@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 
 @RestController
@@ -53,7 +54,7 @@ public class JobController {
             endDateTime = LocalDateTime.parse(endTime);
         }
 
-        List<Job> jobs = jobService.searchJobs(seekerId, city, startDateTime, endDateTime);
+        Collection<Job> jobs = jobService.searchJobs(seekerId, city, startDateTime, endDateTime);
         return ResponseEntity.ok(jobs);
     }
 

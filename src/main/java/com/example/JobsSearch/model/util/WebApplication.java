@@ -21,6 +21,10 @@ public class WebApplication {
     public WebApplication() {
     }
 
+    public WebApplication(String url) {
+        this.url = url;
+    }
+
     public WebApplication(String url, Boolean is_available) {
         this.url = url;
         this.is_available = is_available;

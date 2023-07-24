@@ -4,7 +4,6 @@ import com.example.JobsSearch.model.HiringOrganization;
 import com.example.JobsSearch.model.Seeker;
 import com.example.JobsSearch.model.User;
 import com.example.JobsSearch.model.util.ERole;
-import com.example.JobsSearch.model.util.OrganizationType;
 import com.example.JobsSearch.payload.Request.HrSignupRequest;
 import com.example.JobsSearch.payload.Request.LoginRequest;
 import com.example.JobsSearch.payload.Request.SeekerSignupRequest;
@@ -94,17 +93,13 @@ public class AuthService {
                         new UsernamePasswordAuthenticationToken(
                                 loginRequest.getUsername(), loginRequest.getPassword()));
         if (authentication == null) {
-            return new ResponseObject(false, "Sai tài khoản hoặc mật khẩu", "");
+            return ResponseObject.message("Sai tài khoản hoặc mật khẩu");
         }
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtTokenProvider.generateJwtToken(authentication);
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        List<String> roles =
-                userDetails.getAuthorities().stream()
-                        .map(GrantedAuthority::getAuthority)
-                        .collect(Collectors.toList());
-        return new ResponseObject(true, jwt, userDetails);
+        return ResponseObject.status(true).setMessage(jwt).setData(userDetails);
     }
 
     public static boolean isPasswordValid(String password) {
@@ -112,7 +107,7 @@ public class AuthService {
                 "^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*(),.?\":{}|<>])[A-Za-z0-9!@#$%^&*(),.?\":{}|<>]{8,}$";
         Pattern pattern = Pattern.compile(PASSWORD_PATTERN);
         Matcher matcher = pattern.matcher(password);
-        return matcher.matches();
+        return !matcher.matches();
     }
 
     public ResponseObject seekerSignup(SeekerSignupRequest seekerSignupRequest) {
@@ -120,7 +115,7 @@ public class AuthService {
         if (userRepository.existsByUsername(seekerSignupRequest.getUsername())) {
             return ResponseObject.message("Username already taken");
         }
-        if (!isPasswordValid(seekerSignupRequest.getPassword())) {
+        if (isPasswordValid(seekerSignupRequest.getPassword())) {
             return ResponseObject.message("Mật khẩu phải tuân thủ nguyên tắc có ít nhất 8 ký tự, chứa ít nhất 1 ký tự viết hoa, 1 ký tự số, 1 ký tự đặc biệt");
         }
         // Tạo đối tượng User từ thông tin đăng ký
@@ -145,10 +140,10 @@ public class AuthService {
         if (hiringOrganizationRepository.existsByName(hrSignupRequest.getName())) {
             return ResponseObject.message("Company Name Already Taken");
         }
-        if (!isPasswordValid(hrSignupRequest.getPassword())) {
+        if (isPasswordValid(hrSignupRequest.getPassword())) {
             return ResponseObject.message("Mật khẩu phải tuân thủ nguyên tắc có ít nhất 8 ký tự, chứa ít nhất 1 ký tự viết hoa, 1 ký tự số, 1 ký tự đặc biệt");
         }
-        if (!userRepository.findByEmail(hrSignupRequest.getEmail()).isEmpty()) {
+        if (userRepository.findByEmail(hrSignupRequest.getEmail()).isPresent()) {
             return ResponseObject.message("Email đã tồn tại trong cơ sở dữ liệu.");
         }
         User user = new User();
@@ -168,14 +163,6 @@ public class AuthService {
 
         hiringOrganizationRepository.save(hiringOrganization);
         return ResponseObject.status(true).setData(hiringOrganization);
-    }
-
-    public ResponseObject deleteSeeker(Long id) {
-        if (!seekerRepository.existsById(id)) {
-            return ResponseObject.message("There Are No Seeker With The Requested Id");
-        }
-        seekerRepository.deleteById(id);
-        return ResponseObject.status(true);
     }
 
     public ResponseObject changePassword(Long id, String username, String password) {

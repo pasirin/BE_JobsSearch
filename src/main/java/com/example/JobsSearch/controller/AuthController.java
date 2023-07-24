@@ -1,8 +1,5 @@
 package com.example.JobsSearch.controller;
 
-import com.example.JobsSearch.model.HiringOrganization;
-import com.example.JobsSearch.model.Seeker;
-import com.example.JobsSearch.model.User;
 import com.example.JobsSearch.payload.Request.HrSignupRequest;
 import com.example.JobsSearch.payload.Request.LoginRequest;
 import com.example.JobsSearch.payload.Request.SeekerSignupRequest;
@@ -10,7 +7,6 @@ import com.example.JobsSearch.payload.Response.ResponseObject;
 import com.example.JobsSearch.security.UserDetailsImpl;
 import com.example.JobsSearch.service.impl.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
@@ -20,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.security.Principal;
 
 @RestController
 @RequestMapping("/auth")
@@ -31,20 +26,20 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) {
         return ResponseEntity.ok().body(authService.login(loginRequest));
     }
 
     @PostMapping("/login/new")
-    public ResponseEntity<?> loginNew(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> loginNew(@Valid @RequestBody LoginRequest loginRequest) {
         ResponseObject output = authService.loginNew(loginRequest);
         return output.getStatus()
-                ? ResponseEntity.ok().body(output.getData())
+                ? ResponseEntity.ok().body(output.getMessage())
                 : ResponseEntity.badRequest().body(output.getMessage());
     }
 
     @PostMapping("/seeker/signup")
-    public ResponseEntity<?> register(@RequestBody SeekerSignupRequest seekerSignupRequest) {
+    public ResponseEntity<?> register(@Valid @RequestBody SeekerSignupRequest seekerSignupRequest) {
         ResponseObject output = authService.seekerSignup(seekerSignupRequest);
         return output.getStatus()
                 ? ResponseEntity.ok().body(output.getData())
@@ -52,7 +47,7 @@ public class AuthController {
     }
 
     @PostMapping("/organization/signup")
-    public ResponseEntity<?> hrRegister(@RequestBody HrSignupRequest hrSignupRequest) {
+    public ResponseEntity<?> hrRegister(@Valid @RequestBody HrSignupRequest hrSignupRequest) {
         ResponseObject output = authService.hrSignup(hrSignupRequest);
         return output.getStatus()
                 ? ResponseEntity.ok().body(output.getData())

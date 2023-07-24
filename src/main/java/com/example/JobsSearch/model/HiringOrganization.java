@@ -66,10 +66,12 @@ public class HiringOrganization {
         this.name = name;
     }
 
+    @Transient
     public String getEmail() {
         return user.getEmail();
     }
 
+    @Transient
     public void setEmail(String email) {
         user.setEmail(email);
     }

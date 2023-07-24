@@ -53,26 +53,26 @@ public class WebSecurityConfig {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable)
-                .exceptionHandling(exception -> exception.authenticationEntryPoint(authEntryPointJwt))
-                .sessionManagement(
-                        session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(
-                        auth ->
-                                auth.antMatchers("/admin/**")
-                                        .hasRole("ADMIN")
-                                        .antMatchers("/auth/**")
-                                        .permitAll()
-                                        .antMatchers("/seeker/**")
-                                        .hasRole("SEEKER")
-                                        .antMatchers("/organizations/**")
-                                        .hasRole("HR")
-                                        .antMatchers("/**")
-                                        .permitAll()
-                                        .anyRequest()
-                                        .authenticated());
+  @Bean
+  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    http.csrf(AbstractHttpConfigurer::disable)
+        .exceptionHandling(exception -> exception.authenticationEntryPoint(authEntryPointJwt))
+        .sessionManagement(
+            session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .authorizeHttpRequests(
+            auth ->
+                auth.antMatchers("/admin/**")
+                    .hasRole("ADMIN")
+                    .antMatchers("/auth/**")
+                    .permitAll()
+                    .antMatchers("/seeker/**")
+                    .hasRole("SEEKER")
+                    .antMatchers("/organizations/**")
+                    .hasRole("HR")
+                    .antMatchers("/**")
+                    .permitAll()
+                    .anyRequest()
+                    .authenticated());
 
         http.authenticationProvider(authenticationProvider());
         http.addFilterBefore(

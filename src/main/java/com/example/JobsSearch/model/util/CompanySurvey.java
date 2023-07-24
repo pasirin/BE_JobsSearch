@@ -14,7 +14,7 @@ public class CompanySurvey extends BaseContent {
 
     @OneToOne
     @MapsId
-    @JoinColumn(name = "jobId")
+    @JoinColumn(name = "id")
     private Job job;
 
     public CompanySurvey(List<String> contents, boolean isDisplayed) {

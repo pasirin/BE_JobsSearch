@@ -4,6 +4,7 @@ import com.example.JobsSearch.model.util.OrganizationType;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 public class HrSignupRequest {
     @NotBlank

@@ -14,7 +14,7 @@ public class Interview extends BaseContent {
 
     @OneToOne
     @MapsId
-    @JoinColumn(name = "jobId")
+    @JoinColumn(name = "id")
     private Job job;
 
     public Interview() {
