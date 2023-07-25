@@ -54,7 +54,15 @@ public class HiringOrganizationController {
         : ResponseEntity.badRequest().body(output.getMessage());
   }
 
-  @PostMapping(value = "/add/jobs")
+  @GetMapping("/jobs")
+  public ResponseEntity<?> getAllJobsByOrganization() {
+    UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    ResponseObject output = jobService.getAllJobsByOrganization(userDetails.getId());
+    return output.getStatus() ? ResponseEntity.ok().body(output.getData())
+            : ResponseEntity.badRequest().body(output.getMessage());
+  }
+
+  @PostMapping(value = "/jobs", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   public ResponseEntity<?> createJob(
       @RequestPart String jobRequestString,
       @RequestPart(required = false) MultipartFile mainImages,
@@ -62,13 +70,13 @@ public class HiringOrganizationController {
       @RequestPart(required = false) List<MultipartFile> gallery) {
     UserDetailsImpl userDetails =
         (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    JobRequest jobRequest = new JobRequest();
+    JobRequest jobRequest;
     try {
       ObjectMapper objectMapper = new ObjectMapper();
       objectMapper.registerModule(new JavaTimeModule());
       jobRequest = objectMapper.readValue(jobRequestString, JobRequest.class);
     } catch (Exception err) {
-      System.out.println("Error: " + err);
+      return ResponseEntity.badRequest().body("Unrecognizable job request form");
     }
     ResponseObject output =
         jobService.create(userDetails.getId(), jobRequest, mainImages, subImage, gallery);
