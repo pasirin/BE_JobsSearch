@@ -85,11 +85,11 @@ public class JobService {
     return jobRepository.findAll(specification);
   }
 
-  public Collection<Job> searchJobs(Long seekerId, JobSearchRequest jobSearchRequest) {
+  public Collection<Job> searchJobs(Long userId, JobSearchRequest jobSearchRequest) {
     Seeker seeker =
         seekerRepository
-            .findByUserId(seekerId)
-            .orElseThrow(() -> new RuntimeException("Seeker not found with id: " + seekerId));
+            .findByUserId(userId)
+            .orElseThrow(() -> new RuntimeException("Seeker not found with id: " + userId));
 
     Specification<Job> specification =
         Specification.where(hasCity(jobSearchRequest.getLocation1()))
