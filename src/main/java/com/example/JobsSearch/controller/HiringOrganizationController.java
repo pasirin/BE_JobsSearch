@@ -43,7 +43,7 @@ public class HiringOrganizationController {
         : ResponseEntity.badRequest().body(output.getMessage());
   }
 
-  @PutMapping("/update-profile")
+  @PutMapping("/profile/update")
   public ResponseEntity<?> updateHrProfile(
       @RequestBody HrUpdateProfileRequest hrUpdateProfileRequest) {
     ResponseObject output =
