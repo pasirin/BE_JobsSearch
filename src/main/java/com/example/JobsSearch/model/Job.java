@@ -1,6 +1,10 @@
 package com.example.JobsSearch.model;
 
 import com.example.JobsSearch.model.util.*;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -8,6 +12,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
@@ -26,18 +31,20 @@ public class Job {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "organizationId")
+  @JsonIgnore
   private HiringOrganization organization;
 
   @CreatedDate private LocalDateTime createdAt;
 
   @LastModifiedDate private LocalDateTime updatedAt;
 
-  private LocalDateTime opensAt;
+  private LocalDate opensAt;
 
-  private LocalDateTime expiresAt;
+  private LocalDate expiresAt;
 
   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "mainImageId")
+  @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
   private Image mainImage;
 
   private String title;
@@ -46,25 +53,31 @@ public class Job {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "locationId")
+  @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
   private Location location;
 
   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "salariesId")
+  @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
   private Salary salary;
 
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "job_id")
+  @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
   private List<WorkingHour> workingHours;
 
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinColumn(name = "job_id")
+  @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
   private List<SearchLabel> searchLabels;
 
   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "job")
+  @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
   private WebApplication webApplication;
 
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "job_id")
+  @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
   private List<PostScript> postScripts;
 
   private String catchText;
@@ -72,23 +85,29 @@ public class Job {
 
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "job_id")
+  @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
   private List<Image> subImages;
 
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "job_id")
+  @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
   private List<Property> properties;
 
   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "job")
+  @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
   private CompanySurvey companySurvey;
 
   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "job")
+  @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
   private Barometer barometer;
 
   @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true)
   @JoinColumn(name = "photoGalleryId")
+  @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
   private PhotoGallery photoGallery;
 
   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true,mappedBy = "job")
+  @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
   private Interview interview;
 
   private String productCode;
@@ -98,8 +117,8 @@ public class Job {
 
   public Job(
       HiringOrganization organization,
-      LocalDateTime opensAt,
-      LocalDateTime expiresAt,
+      LocalDate opensAt,
+      LocalDate expiresAt,
       Image mainImage,
       String title,
       String jobTitleCatchPhrase,
@@ -135,8 +154,8 @@ public class Job {
 
   public Job(
       HiringOrganization organization,
-      LocalDateTime opensAt,
-      LocalDateTime expiresAt,
+      LocalDate opensAt,
+      LocalDate expiresAt,
       Image mainImage,
       String title,
       String jobTitleCatchPhrase,

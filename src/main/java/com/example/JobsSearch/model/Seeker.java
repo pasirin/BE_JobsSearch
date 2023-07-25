@@ -41,7 +41,7 @@ public class Seeker {
 
     private String other_details;
 
-    @OneToMany(mappedBy = "primaryKey.seeker")
+    @OneToMany(mappedBy = "primaryKey.seeker", cascade = CascadeType.ALL)
     private Set<History> histories = new HashSet<>();
 
     public Seeker() {

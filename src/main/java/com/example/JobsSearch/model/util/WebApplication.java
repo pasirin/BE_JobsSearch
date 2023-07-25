@@ -1,6 +1,10 @@
 package com.example.JobsSearch.model.util;
 
 import com.example.JobsSearch.model.Job;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerator;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -14,6 +18,7 @@ public class WebApplication {
     @OneToOne
     @MapsId
     @JoinColumn(name = "jobId")
+    @JsonIgnore
     private Job job;
     private String url;
     private Boolean is_available;

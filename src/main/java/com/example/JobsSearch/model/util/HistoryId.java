@@ -3,11 +3,13 @@ package com.example.JobsSearch.model.util;
 import com.example.JobsSearch.model.Job;
 import com.example.JobsSearch.model.Seeker;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Embeddable;
 import javax.persistence.ManyToOne;
 import java.io.Serializable;
 
+@NoArgsConstructor
 @Embeddable
 public class HistoryId implements Serializable {
     @ManyToOne

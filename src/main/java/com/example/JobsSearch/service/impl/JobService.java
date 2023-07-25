@@ -1,16 +1,18 @@
 package com.example.JobsSearch.service.impl;
 
-import com.example.JobsSearch.model.HiringOrganization;
-import com.example.JobsSearch.model.History;
-import com.example.JobsSearch.model.Job;
-import com.example.JobsSearch.model.Seeker;
+import com.example.JobsSearch.model.*;
 import com.example.JobsSearch.model.util.*;
 import com.example.JobsSearch.models.util.InteractionType;
 import com.example.JobsSearch.payload.Request.JobRequest;
+import com.example.JobsSearch.payload.Request.JobSearchRequest;
 import com.example.JobsSearch.payload.Response.ResponseObject;
 import com.example.JobsSearch.repository.*;
 import com.example.JobsSearch.repository.util.*;
 import com.example.JobsSearch.service.ServiceCRUD;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,19 +48,11 @@ public class JobService {
 
   @Autowired PhotoGalleryRepository photoGalleryRepository;
 
-  @Autowired WebApplicationRepository webApplicationRepository;
-
   @Autowired PostScriptRepository postScriptRepository;
 
   @Autowired WorkingHourRepository workingHourRepository;
 
   @Autowired PropertyRepository propertyRepository;
-
-  @Autowired CompanySurveyRepository companySurveyRepository;
-
-  @Autowired BarometerRepository barometerRepository;
-
-  @Autowired InterviewRepository interviewRepository;
 
   @Autowired SalaryRepository salaryRepository;
 
@@ -67,7 +61,11 @@ public class JobService {
   }
 
   // lấy ra tất cả các job của organization
-  public ResponseObject getAllJobsByOrganization(Long organizationId) {
+  public ResponseObject getAllJobsByOrganization(Long userId) {
+    if (hiringOrganizationRepository.findByUserId(userId).isEmpty()) {
+      return ResponseObject.message("There Aren't any organization with the requested Id");
+    }
+    Long organizationId = hiringOrganizationRepository.findByUserId(userId).get().getId();
     List<Job> jobList = jobRepository.findByOrganizationId(organizationId);
     if (jobList.isEmpty()) {
       return ResponseObject.message("There are no posts yet");
@@ -87,15 +85,16 @@ public class JobService {
     return jobRepository.findAll(specification);
   }
 
-  public Collection<Job> searchJobs(
-      Long seekerId, String city, LocalDateTime startTime, LocalDateTime endTime) {
+  public Collection<Job> searchJobs(Long seekerId, JobSearchRequest jobSearchRequest) {
     Seeker seeker =
         seekerRepository
-            .findById(seekerId)
+            .findByUserId(seekerId)
             .orElseThrow(() -> new RuntimeException("Seeker not found with id: " + seekerId));
 
     Specification<Job> specification =
-        Specification.where(hasCity(city)).and(hasStartTime(startTime)).and(hasEndTime(endTime));
+        Specification.where(hasCity(jobSearchRequest.getLocation1()))
+            .and(hasStartTime(LocalDateTime.from(jobSearchRequest.getStartTime())))
+            .and(hasEndTime(LocalDateTime.from(jobSearchRequest.getEndTime())));
 
     // Lấy danh sách công việc theo các điều kiện tìm kiếm
     List<Job> jobs = jobRepository.findAll(specification);
@@ -130,44 +129,30 @@ public class JobService {
   /**
    * Định nghĩa hàm tương tác với job
    *
-   * @param seekerId
    * @param jobId
    * @param interactionType
    */
-  public void interactWithJob(Long seekerId, Long jobId, InteractionType interactionType) {
-    Seeker seeker =
-        seekerRepository
-            .findById(seekerId)
-            .orElseThrow(() -> new RuntimeException("Seeker not found with id: " + seekerId));
-
-    Job job =
-        jobRepository
-            .findById(jobId)
-            .orElseThrow(() -> new RuntimeException("Job not found with id: " + jobId));
-
-    // Kiểm tra xem seeker đã tương tác với job này chưa
-    boolean isInteracted =
-        seeker.getHistories().stream().anyMatch(history -> history.getJob().getId().equals(jobId));
-
-    // Nếu seeker đã tương tác rồi thì không làm gì cả
-    if (isInteracted) {
-      return;
+  public ResponseObject interactWithJob(Long userId, Long jobId, InteractionType interactionType) {
+    if (seekerRepository.findByUserId(userId).isEmpty()) {
+      return ResponseObject.message("There Aren't any seeker with the requested id");
     }
-
-    // Nếu là LIKE hoặc DISLIKE, lưu thông tin tương tác vào lịch sử
-    if (interactionType == InteractionType.LIKE || interactionType == InteractionType.DISLIKE) {
-      HistoryId historyId = new HistoryId(seeker, job);
-      History history = new History(historyId, interactionType);
-      historyRepository.save(history);
-
-      // Cập nhật lại danh sách công việc hiển thị cho seeker
-      seeker.getHistories().add(history);
-      seekerRepository.save(seeker);
-
-      // Cập nhật lại danh sách tương tác cho job
-      job.getHistories().add(history);
-      jobRepository.save(job);
+    if (jobRepository.findById(jobId).isEmpty()) {
+      return ResponseObject.message("There Aren't any job with the requested id");
     }
+    Job job = jobRepository.findById(jobId).get();
+    Seeker seeker = seekerRepository.findByUserId(userId).get();
+
+    HistoryId historyId = new HistoryId(seeker, job);
+    History history;
+
+    if(historyRepository.findByPrimaryKeySeekerIdAndPrimaryKeyJobId(seeker.getId(),jobId).isPresent()) {
+      history = historyRepository.findByPrimaryKeySeekerIdAndPrimaryKeyJobId(seeker.getId(),jobId).get();
+      history.setInteractionType(interactionType);
+    } else {
+      history = new History(historyId, interactionType);
+    }
+    historyRepository.save(history);
+    return ResponseObject.ok();
   }
 
   public ResponseObject create(
@@ -178,6 +163,9 @@ public class JobService {
       List<MultipartFile> gallery) {
     if (hiringOrganizationRepository.findByUserId(id).isEmpty()) {
       return ResponseObject.message("There Aren't any HR with the provided Id");
+    }
+    if (request.getLocationId() == null) {
+      return ResponseObject.message("The Location Id must not be null");
     }
     if (locationRepository.findById(request.getLocationId()).isEmpty()) {
       return ResponseObject.message("There Aren't any Location with the provided Id");

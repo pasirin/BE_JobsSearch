@@ -1,6 +1,7 @@
 package com.example.JobsSearch.model.util;
 
 import com.example.JobsSearch.model.Job;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -15,6 +16,7 @@ public class Barometer extends BaseContent {
     @OneToOne
     @MapsId
     @JoinColumn(name = "id")
+    @JsonIgnore
     private Job job;
 
     public Barometer() {
