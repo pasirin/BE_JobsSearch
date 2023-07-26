@@ -30,14 +30,6 @@ public class AuthController {
         return ResponseEntity.ok().body(authService.login(loginRequest));
     }
 
-    @PostMapping("/login/new")
-    public ResponseEntity<?> loginNew(@Valid @RequestBody LoginRequest loginRequest) {
-        ResponseObject output = authService.loginNew(loginRequest);
-        return output.getStatus()
-                ? ResponseEntity.ok().body(output.getMessage())
-                : ResponseEntity.badRequest().body(output.getMessage());
-    }
-
     @PostMapping("/seeker/signup")
     public ResponseEntity<?> register(@Valid @RequestBody SeekerSignupRequest seekerSignupRequest) {
         ResponseObject output = authService.seekerSignup(seekerSignupRequest);

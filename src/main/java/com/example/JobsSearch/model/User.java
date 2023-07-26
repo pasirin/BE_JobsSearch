@@ -1,6 +1,7 @@
 package com.example.JobsSearch.model;
 
 import com.example.JobsSearch.model.util.ERole;
+import com.example.JobsSearch.model.util.EStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sun.istack.NotNull;
@@ -47,6 +48,11 @@ public class User {
     @Getter
     @JsonIgnore
     private String resetPasswordToken;
+
+    @Getter
+    @Setter
+    @Enumerated(EnumType.STRING)
+    private EStatus status;
 
     @CreatedDate
     @JsonIgnore

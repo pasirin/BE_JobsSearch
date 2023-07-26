@@ -1,5 +1,6 @@
 package com.example.JobsSearch.controller;
 
+import com.example.JobsSearch.model.util.EStatus;
 import com.example.JobsSearch.payload.Request.NewsRequest;
 import com.example.JobsSearch.payload.Request.SearchLabelRequest;
 import com.example.JobsSearch.payload.Response.ResponseObject;
@@ -11,6 +12,7 @@ import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Email;
 
 @RestController
 @RequestMapping("/admin")
@@ -65,8 +67,12 @@ public class AdminController {
   }
 
   @GetMapping("/organizations/q")
-  public ResponseEntity<?> searchHr(@Valid @RequestParam String s) {
-    return ResponseEntity.ok().body(hiringOrganizationService.getByName(s));
+  public ResponseEntity<?> searchHr(
+      @Valid @RequestParam(required = false) String name,
+      @Valid @RequestParam(required = false) @Email String email,
+      @Valid @RequestParam(required = false) String phoneNumber) {
+    return ResponseEntity.ok()
+        .body(hiringOrganizationService.searchQuery(email, name, phoneNumber));
   }
 
   @GetMapping("/organizations/organizationId}")
@@ -107,6 +113,14 @@ public class AdminController {
   @DeleteMapping("/users/{id}")
   public ResponseEntity<?> deleteUserById(@Valid @PathVariable Long id) {
     ResponseObject output = userService.delete(id);
+    return output.getStatus()
+        ? ResponseEntity.ok().build()
+        : ResponseEntity.badRequest().body(output.getMessage());
+  }
+
+  @PostMapping("/users/{id}/status")
+  public ResponseEntity<?> changeUserStatus(@PathVariable Long id, @Valid EStatus eStatus) {
+    ResponseObject output = userService.setStatus(id, eStatus);
     return output.getStatus()
         ? ResponseEntity.ok().build()
         : ResponseEntity.badRequest().body(output.getMessage());

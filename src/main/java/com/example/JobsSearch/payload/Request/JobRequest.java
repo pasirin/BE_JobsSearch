@@ -23,6 +23,7 @@ public class JobRequest {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate expiresAt;
+    private String mainImageUrl;
     private String mainImageDescription;
     @NotBlank
     private String title;
@@ -36,10 +37,12 @@ public class JobRequest {
     private List<String> postScripts;
     private String catchText;
     private String leadText;
+    private List<String> subImageUrl;
     private List<String> subImageDescriptions;
     private List<PropertyRequest> properties;
     private CompanySurveyRequest companySurvey;
     private BarometerRequest barometer;
+    private List<String> galleryUrl;
     private List<String> galleryDescription;
     private InterviewRequest interview;
     private String productCode;

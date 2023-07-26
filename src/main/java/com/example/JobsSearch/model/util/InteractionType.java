@@ -1,4 +1,4 @@
-package com.example.JobsSearch.models.util;
+package com.example.JobsSearch.model.util;
 
 public enum InteractionType {
     LIKE,

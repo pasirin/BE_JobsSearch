@@ -1,12 +1,10 @@
 package com.example.JobsSearch.controller;
 
 import com.example.JobsSearch.model.Job;
-import com.example.JobsSearch.model.Seeker;
-import com.example.JobsSearch.models.util.InteractionType;
+import com.example.JobsSearch.model.util.InteractionType;
 import com.example.JobsSearch.payload.Request.JobSearchRequest;
 import com.example.JobsSearch.payload.Request.SeekerUpdateRequest;
 import com.example.JobsSearch.payload.Response.ResponseObject;
-import com.example.JobsSearch.repository.SeekerRepository;
 import com.example.JobsSearch.security.UserDetailsImpl;
 import com.example.JobsSearch.service.impl.JobService;
 import com.example.JobsSearch.service.impl.SeekerService;
@@ -17,9 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
-import java.time.LocalDateTime;
 import java.util.Collection;
 
 @RestController

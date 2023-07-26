@@ -1,6 +1,7 @@
 package com.example.JobsSearch.security;
 
 import com.example.JobsSearch.model.User;
+import com.example.JobsSearch.model.util.EStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,6 +20,8 @@ public class UserDetailsImpl implements UserDetails {
     @JsonIgnore
     private String password;
 
+    private EStatus isEnabled;
+
     private Collection<? extends GrantedAuthority> authorities;
 
 
@@ -26,11 +29,12 @@ public class UserDetailsImpl implements UserDetails {
             Long id,
             String username,
             String password,
-            Collection<? extends GrantedAuthority> authorities) {
+            Collection<? extends GrantedAuthority> authorities, EStatus isEnabled) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.authorities = authorities;
+        this.isEnabled = isEnabled;
     }
 
     public static UserDetailsImpl build(User user) {
@@ -40,7 +44,7 @@ public class UserDetailsImpl implements UserDetails {
                 user.getId(),
                 user.getUsername(),
                 user.getPassword(),
-                authorityList);
+                authorityList,user.getStatus());
     }
 
     @Override
@@ -75,7 +79,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return this.isEnabled != EStatus.DISABLE;
     }
 
     public Long getId() {

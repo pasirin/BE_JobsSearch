@@ -3,6 +3,7 @@ package com.example.JobsSearch.service.impl;
 import com.example.JobsSearch.model.HiringOrganization;
 import com.example.JobsSearch.model.Seeker;
 import com.example.JobsSearch.model.User;
+import com.example.JobsSearch.model.util.EStatus;
 import com.example.JobsSearch.payload.Response.ResponseObject;
 import com.example.JobsSearch.repository.HiringOrganizationRepository;
 import com.example.JobsSearch.repository.SeekerRepository;
@@ -30,7 +31,7 @@ public class UserService {
   }
 
   public ResponseObject getById(Long id) {
-    if(userRepository.findById(id).isEmpty()) {
+    if (userRepository.findById(id).isEmpty()) {
       return ResponseObject.message("There Aren't any user with the requested Id");
     }
     return ResponseObject.ok().setData(userRepository.findById(id).get());
@@ -52,6 +53,16 @@ public class UserService {
       Seeker seeker = seekerRepository.findByUserId(id).get();
       seekerRepository.delete(seeker);
     }
+    return ResponseObject.ok();
+  }
+
+  public ResponseObject setStatus(Long id, EStatus status) {
+    if (userRepository.findById(id).isEmpty()) {
+      return ResponseObject.message("There Aren't any user with the requested Id");
+    }
+    User user = userRepository.findById(id).get();
+    user.setStatus(status);
+    userRepository.save(user);
     return ResponseObject.ok();
   }
 }

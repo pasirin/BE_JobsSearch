@@ -56,30 +56,19 @@ public class HiringOrganizationController {
 
   @GetMapping("/jobs")
   public ResponseEntity<?> getAllJobsByOrganization() {
-    UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    UserDetailsImpl userDetails =
+        (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     ResponseObject output = jobService.getAllJobsByOrganization(userDetails.getId());
-    return output.getStatus() ? ResponseEntity.ok().body(output.getData())
-            : ResponseEntity.badRequest().body(output.getMessage());
+    return output.getStatus()
+        ? ResponseEntity.ok().body(output.getData())
+        : ResponseEntity.badRequest().body(output.getMessage());
   }
 
   @PostMapping(value = "/jobs", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  public ResponseEntity<?> createJob(
-      @RequestPart String jobRequestString,
-      @RequestPart(required = false) MultipartFile mainImages,
-      @RequestPart(required = false) List<MultipartFile> subImage,
-      @RequestPart(required = false) List<MultipartFile> gallery) {
+  public ResponseEntity<?> createJob(@RequestBody JobRequest jobRequest) {
     UserDetailsImpl userDetails =
         (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    JobRequest jobRequest;
-    try {
-      ObjectMapper objectMapper = new ObjectMapper();
-      objectMapper.registerModule(new JavaTimeModule());
-      jobRequest = objectMapper.readValue(jobRequestString, JobRequest.class);
-    } catch (Exception err) {
-      return ResponseEntity.badRequest().body("Unrecognizable job request form");
-    }
-    ResponseObject output =
-        jobService.create(userDetails.getId(), jobRequest, mainImages, subImage, gallery);
+    ResponseObject output = jobService.create(userDetails.getId(), jobRequest);
     return output.getStatus()
         ? ResponseEntity.ok().build()
         : ResponseEntity.badRequest().body(output.getMessage());

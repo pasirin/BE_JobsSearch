@@ -43,7 +43,6 @@ public class SwaggerConfig {
   public Docket api() {
     return new Docket(DocumentationType.SWAGGER_2)
         .directModelSubstitute(LocalTime.class, String.class)
-        .directModelSubstitute(JobRequest.class, String.class)
         .securityContexts(List.of(securityContext()))
         .securitySchemes(List.of(apiKey()))
         .select()

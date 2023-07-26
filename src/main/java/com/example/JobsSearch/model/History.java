@@ -1,7 +1,7 @@
 package com.example.JobsSearch.model;
 
 import com.example.JobsSearch.model.util.HistoryId;
-import com.example.JobsSearch.models.util.InteractionType;
+import com.example.JobsSearch.model.util.InteractionType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;

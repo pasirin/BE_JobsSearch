@@ -4,6 +4,7 @@ import com.example.JobsSearch.model.HiringOrganization;
 import com.example.JobsSearch.model.Seeker;
 import com.example.JobsSearch.model.User;
 import com.example.JobsSearch.model.util.ERole;
+import com.example.JobsSearch.model.util.EStatus;
 import com.example.JobsSearch.payload.Request.HrSignupRequest;
 import com.example.JobsSearch.payload.Request.LoginRequest;
 import com.example.JobsSearch.payload.Request.SeekerSignupRequest;
@@ -67,6 +68,7 @@ public class AuthService {
     public void initAdmin(ApplicationReadyEvent event) {
         if (!userRepository.existsByUsername(adminUsername)) {
             User user = new User(adminUsername, passwordEncoder.encode(adminPassword), ERole.ROLE_ADMIN);
+            user.setStatus(EStatus.ACTIVE);
             userRepository.save(user);
         }
     }
@@ -85,21 +87,6 @@ public class AuthService {
                         .map(GrantedAuthority::getAuthority)
                         .collect(Collectors.toList());
         return new JwtResponse(jwt, userDetails.getId(), userDetails.getUsername(), roles);
-    }
-
-    public ResponseObject loginNew(LoginRequest loginRequest) {
-        Authentication authentication =
-                authenticationManager.authenticate(
-                        new UsernamePasswordAuthenticationToken(
-                                loginRequest.getUsername(), loginRequest.getPassword()));
-        if (authentication == null) {
-            return ResponseObject.message("Sai tài khoản hoặc mật khẩu");
-        }
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtTokenProvider.generateJwtToken(authentication);
-
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        return ResponseObject.status(true).setMessage(jwt).setData(userDetails);
     }
 
     public static boolean isPasswordValid(String password) {
@@ -124,7 +111,7 @@ public class AuthService {
                         seekerSignupRequest.getUsername(),
                         passwordEncoder.encode(seekerSignupRequest.getPassword()),
                         ERole.ROLE_SEEKER);
-
+        user.setStatus(EStatus.ACTIVE);
         // Lưu user vào cơ sở dữ liệu
         userRepository.save(user);
         seekerRepository.save(new Seeker(user));
@@ -151,12 +138,13 @@ public class AuthService {
         user.setPassword(passwordEncoder.encode(hrSignupRequest.getPassword()));
         user.setEmail(hrSignupRequest.getEmail());
         user.setRole(ERole.ROLE_HR);
+        user.setStatus(EStatus.ACTIVE);
         userRepository.save(user);
 
         HiringOrganization hiringOrganization = new HiringOrganization();
         hiringOrganization.setUser(user);
         hiringOrganization.setName(hrSignupRequest.getName());
-        hiringOrganization.setPhone_number(hrSignupRequest.getPhone_number());
+        hiringOrganization.setPhoneNumber(hrSignupRequest.getPhone_number());
         hiringOrganization.setWebsite(hrSignupRequest.getWebsite());
         hiringOrganization.setAddress(hrSignupRequest.getAddress());
         hiringOrganization.setIntroduction(hrSignupRequest.getIntroduction());

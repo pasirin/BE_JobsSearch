@@ -19,7 +19,7 @@ public class HiringOrganization {
 
     private String name;
 
-    private String phone_number;
+    private String phoneNumber;
 
     private String website;
 
@@ -36,10 +36,10 @@ public class HiringOrganization {
     public HiringOrganization(User user) {
         this.user = user;
     }
-    public HiringOrganization(User user, String name, String phone_number, String website, String address, String introduction, OrganizationType organizationType) {
+    public HiringOrganization(User user, String name, String phoneNumber, String website, String address, String introduction, OrganizationType organizationType) {
         this.user = user;
         this.name = name;
-        this.phone_number = phone_number;
+        this.phoneNumber = phoneNumber;
         this.website = website;
         this.address = address;
         this.introduction = introduction;
@@ -76,12 +76,12 @@ public class HiringOrganization {
         user.setEmail(email);
     }
 
-    public String getPhone_number() {
-        return phone_number;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setPhone_number(String phone_number) {
-        this.phone_number = phone_number;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public String getWebsite() {

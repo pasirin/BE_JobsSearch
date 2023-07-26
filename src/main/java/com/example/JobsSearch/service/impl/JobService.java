@@ -2,17 +2,12 @@ package com.example.JobsSearch.service.impl;
 
 import com.example.JobsSearch.model.*;
 import com.example.JobsSearch.model.util.*;
-import com.example.JobsSearch.models.util.InteractionType;
+import com.example.JobsSearch.model.util.InteractionType;
 import com.example.JobsSearch.payload.Request.JobRequest;
 import com.example.JobsSearch.payload.Request.JobSearchRequest;
 import com.example.JobsSearch.payload.Response.ResponseObject;
 import com.example.JobsSearch.repository.*;
 import com.example.JobsSearch.repository.util.*;
-import com.example.JobsSearch.service.ServiceCRUD;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -145,8 +140,11 @@ public class JobService {
     HistoryId historyId = new HistoryId(seeker, job);
     History history;
 
-    if(historyRepository.findByPrimaryKeySeekerIdAndPrimaryKeyJobId(seeker.getId(),jobId).isPresent()) {
-      history = historyRepository.findByPrimaryKeySeekerIdAndPrimaryKeyJobId(seeker.getId(),jobId).get();
+    if (historyRepository
+        .findByPrimaryKeySeekerIdAndPrimaryKeyJobId(seeker.getId(), jobId)
+        .isPresent()) {
+      history =
+          historyRepository.findByPrimaryKeySeekerIdAndPrimaryKeyJobId(seeker.getId(), jobId).get();
       history.setInteractionType(interactionType);
     } else {
       history = new History(historyId, interactionType);
@@ -155,12 +153,7 @@ public class JobService {
     return ResponseObject.ok();
   }
 
-  public ResponseObject create(
-      Long id,
-      JobRequest request,
-      MultipartFile MainImage,
-      List<MultipartFile> subImage,
-      List<MultipartFile> gallery) {
+  public ResponseObject create(Long id, JobRequest request) {
     if (hiringOrganizationRepository.findByUserId(id).isEmpty()) {
       return ResponseObject.message("There Aren't any HR with the provided Id");
     }
@@ -179,22 +172,16 @@ public class JobService {
     List<Image> galleryList = new ArrayList<>();
 
     // Main Image handling
-    if (MainImage != null) {
-      try {
-        String mainImageUrl = imageUploadService.uploadImage(MainImage);
-        mainImage = new Image(mainImageUrl, request.getMainImageDescription());
-        mainImage = imageRepository.save(mainImage);
-      } catch (IOException e) {
-        logger.error(String.valueOf(e));
-      }
+    if (request.getMainImageUrl() != null) {
+      mainImage = new Image(request.getMainImageUrl(), request.getMainImageDescription());
+      mainImage = imageRepository.save(mainImage);
     }
 
     // Sub-Image handling
-    if (subImage != null && subImage.size() > 0) {
-      IntStream.range(0, subImage.size())
+    if (request.getSubImageUrl() != null && request.getSubImageUrl().size() > 0) {
+      IntStream.range(0, request.getSubImageUrl().size())
           .forEach(
               index -> {
-                MultipartFile temp = subImage.get(index);
                 String description = null;
                 try {
                   description = request.getSubImageDescriptions().get(index);
@@ -205,23 +192,17 @@ public class JobService {
                           + " Error: "
                           + e);
                 }
-                try {
-                  String subImageUrl = imageUploadService.uploadImage(temp);
-                  Image image = new Image(subImageUrl, description);
-                  Image saved = imageRepository.save(image);
-                  subImageList.add(saved);
-                } catch (IOException e) {
-                  logger.error(String.valueOf(e));
-                }
+                Image image = new Image(request.getSubImageUrl().get(index), description);
+                Image saved = imageRepository.save(image);
+                subImageList.add(saved);
               });
     }
 
     //     Handle Photo Gallery (Not used)
-    if (gallery != null && gallery.size() > 0) {
-      IntStream.range(0, gallery.size())
+    if (request.getGalleryUrl() != null && request.getGalleryUrl().size() > 0) {
+      IntStream.range(0, request.getGalleryUrl().size())
           .forEach(
               index -> {
-                MultipartFile temp = gallery.get(index);
                 String description = null;
                 try {
                   description = request.getGalleryDescription().get(index);
@@ -229,14 +210,9 @@ public class JobService {
                   logger.error(
                       "Missing description for index number of gallery: " + index + " Error: " + e);
                 }
-                try {
-                  String galleryImageUrl = imageUploadService.uploadImage(temp);
-                  Image image = new Image(galleryImageUrl, description);
-                  Image savedImage = imageRepository.save(image);
-                  galleryList.add(savedImage);
-                } catch (IOException e) {
-                  logger.error(String.valueOf(e));
-                }
+                Image image = new Image(request.getGalleryUrl().get(index), description);
+                Image savedImage = imageRepository.save(image);
+                galleryList.add(savedImage);
               });
     }
     PhotoGallery photoGallery = new PhotoGallery(galleryList, !galleryList.isEmpty());
