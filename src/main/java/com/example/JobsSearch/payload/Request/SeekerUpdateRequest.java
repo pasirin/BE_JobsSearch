@@ -15,4 +15,5 @@ public class SeekerUpdateRequest {
   @Getter @Setter private String skills;
   @Getter @Setter private String achievements;
   @Getter @Setter private String other_details;
+  @Getter @Setter private String profileImageUrl;
 }

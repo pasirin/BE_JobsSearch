@@ -101,7 +101,7 @@ public class Job {
   @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
   private Barometer barometer;
 
-  @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true)
+  @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
   @JoinColumn(name = "photoGalleryId")
   @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
   private PhotoGallery photoGallery;

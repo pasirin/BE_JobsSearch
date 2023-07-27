@@ -64,7 +64,7 @@ public class HiringOrganizationController {
         : ResponseEntity.badRequest().body(output.getMessage());
   }
 
-  @PostMapping(value = "/jobs", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  @PostMapping(value = "/jobs")
   public ResponseEntity<?> createJob(@RequestBody JobRequest jobRequest) {
     UserDetailsImpl userDetails =
         (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

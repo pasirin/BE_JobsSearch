@@ -19,11 +19,13 @@ public class Seeker {
     @JoinColumn(name = "userId")
     private User user;
 
-    private String name;
+    // Support better search result
+    private String name = "";
 
     private String photo;
 
-    private String phone_number;
+    // Support better search result
+    private String phoneNumber = "";
 
     private Date dob;
 
@@ -53,7 +55,7 @@ public class Seeker {
 
     public void setProfile(String photo, String phone_number, Date dob, String address, String website, String education, String experience, String skills, String achievements, String other_details) {
         this.photo = photo;
-        this.phone_number = phone_number;
+        this.phoneNumber = phone_number;
         this.dob = dob;
         this.address = address;
         this.website = website;

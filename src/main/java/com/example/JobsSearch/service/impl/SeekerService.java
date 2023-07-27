@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -20,8 +19,7 @@ public class SeekerService {
 
   @Autowired SeekerRepository seekerRepository;
 
-  @Autowired
-  UserRepository userRepository;
+  @Autowired UserRepository userRepository;
   @Autowired ImageUploadService imageUploadService;
 
   public ResponseObject getProfile(Long id) {
@@ -46,6 +44,13 @@ public class SeekerService {
     return seekerRepository.findByNameLike("%" + name + "%");
   }
 
+  public Collection<Seeker> searchQuery(String email, String name, String phoneNumber) {
+    return seekerRepository.findByUserEmailLikeAndNameLikeAndPhoneNumberLike(
+        "%" + (email == null ? "" : email) + "%",
+        "%" + (name == null ? "" : name) + "%",
+        "%" + (phoneNumber == null ? "" : phoneNumber) + "%");
+  }
+
   public ResponseObject delete(Long id) {
     if (!seekerRepository.existsById(id)) {
       return ResponseObject.message("There Aren't any Seeker with the provided Id");
@@ -54,14 +59,13 @@ public class SeekerService {
     return ResponseObject.ok();
   }
 
-  public ResponseObject update(
-      Long id, SeekerUpdateRequest seekerUpdateRequest, MultipartFile image) {
+  public ResponseObject update(Long id, SeekerUpdateRequest seekerUpdateRequest) {
     if (seekerRepository.findByUserId(id).isEmpty()) {
       return ResponseObject.message("There Aren't any Seeker with the provided Id:" + id);
     }
     Seeker seeker = seekerRepository.findByUserId(id).get();
     seeker.setName(seekerUpdateRequest.getName());
-    seeker.setPhone_number(seekerUpdateRequest.getPhone_number());
+    seeker.setPhoneNumber(seekerUpdateRequest.getPhone_number());
     seeker.setDob(seekerUpdateRequest.getDob());
     seeker.setAddress(seekerUpdateRequest.getAddress());
     seeker.setWebsite(seekerUpdateRequest.getWebsite());
@@ -70,24 +74,14 @@ public class SeekerService {
     seeker.setSkills(seekerUpdateRequest.getSkills());
     seeker.setAchievements(seekerUpdateRequest.getAchievements());
     seeker.setOther_details(seekerUpdateRequest.getOther_details());
-    if(!seeker.getPhoto().isEmpty()) {
+    if (!seeker.getPhoto().isEmpty()) {
       try {
         String result = imageUploadService.deleteImage(seeker.getPhoto());
       } catch (IOException e) {
         logger.error(String.valueOf(e));
-        return ResponseObject.message("Failed to delete the previous profile photo of user");
       }
     }
-    String profilePictureUrl;
-    if (image != null) {
-      try {
-        profilePictureUrl = imageUploadService.uploadImage(image);
-      } catch (IOException e) {
-        logger.error(String.valueOf(e));
-        return ResponseObject.message(e.toString());
-      }
-      seeker.setPhoto(profilePictureUrl);
-    }
+    seeker.setPhoto(seekerUpdateRequest.getProfileImageUrl());
     seekerRepository.save(seeker);
     return ResponseObject.ok();
   }

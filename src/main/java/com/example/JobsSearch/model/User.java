@@ -31,7 +31,6 @@ public class User {
     private Long id;
 
     @NotBlank
-    @Size(min = 3, max = 20)
     private String username;
 
     @NotBlank
@@ -42,7 +41,8 @@ public class User {
     private ERole role;
 
     @Email
-    private String email;
+    // Support better search result
+    private String email = "";
 
     @Setter
     @Getter

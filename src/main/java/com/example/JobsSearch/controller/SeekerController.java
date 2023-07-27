@@ -38,11 +38,10 @@ public class SeekerController {
 
   @PostMapping("/profile/update")
   public ResponseEntity<?> updateProfile(
-      @Valid SeekerUpdateRequest seekerUpdateRequest,
-      @RequestPart(required = false) MultipartFile image) {
+      @Valid @RequestBody SeekerUpdateRequest seekerUpdateRequest) {
     UserDetailsImpl userDetails =
         (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    ResponseObject output = seekerService.update(userDetails.getId(), seekerUpdateRequest, image);
+    ResponseObject output = seekerService.update(userDetails.getId(), seekerUpdateRequest);
     return output.getStatus()
         ? ResponseEntity.ok().build()
         : ResponseEntity.badRequest().body(output.getMessage());
@@ -53,8 +52,10 @@ public class SeekerController {
   public ResponseEntity<?> searchJob(@Valid JobSearchRequest jobSearchRequest) {
     UserDetailsImpl userDetails =
         (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    Collection<Job> jobs = jobService.searchJobs(userDetails.getId(), jobSearchRequest);
-    return ResponseEntity.ok(jobs);
+    ResponseObject output = jobService.searchJobs(userDetails.getId(), jobSearchRequest);
+    return output.getStatus()
+        ? ResponseEntity.ok().body(output.getData())
+        : ResponseEntity.badRequest().body(output.getMessage());
   }
 
   @PostMapping("/jobs/{id}")
