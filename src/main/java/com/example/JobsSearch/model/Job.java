@@ -1,10 +1,8 @@
 package com.example.JobsSearch.model;
 
 import com.example.JobsSearch.model.util.*;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -64,7 +62,7 @@ public class Job {
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "job_id")
   @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-  private List<WorkingHour> workingHours;
+  private List<WorkingHour> working_hour;
 
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinColumn(name = "job_id")
@@ -141,7 +139,7 @@ public class Job {
     this.jobTitleCatchPhrase = jobTitleCatchPhrase;
     this.location = location;
     this.salary = salary;
-    this.workingHours = workingHours;
+    this.working_hour = workingHours;
     this.searchLabels = searchLabels;
     this.postScripts = postScripts;
     this.catchText = catchText;
@@ -182,7 +180,7 @@ public class Job {
     this.jobTitleCatchPhrase = jobTitleCatchPhrase;
     this.location = location;
     this.salary = salary;
-    this.workingHours = workingHours;
+    this.working_hour = workingHours;
     this.searchLabels = searchLabels;
     this.webApplication = webApplication;
     this.postScripts = postScripts;

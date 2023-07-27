@@ -5,6 +5,7 @@ import com.example.JobsSearch.model.Seeker;
 import com.example.JobsSearch.model.User;
 import com.example.JobsSearch.model.util.ERole;
 import com.example.JobsSearch.model.util.EStatus;
+import com.example.JobsSearch.model.util.OrganizationType;
 import com.example.JobsSearch.payload.Request.HrSignupRequest;
 import com.example.JobsSearch.payload.Request.LoginRequest;
 import com.example.JobsSearch.payload.Request.SeekerSignupRequest;
@@ -142,6 +143,14 @@ public class AuthService {
         userRepository.save(user);
 
         HiringOrganization hiringOrganization = new HiringOrganization();
+        String value = hrSignupRequest.getOrganizationType().getValue();
+        if(value.equals("B")) {
+            hiringOrganization.setOrganizationType(OrganizationType.B);
+        } else if(value.equals("C")) {
+            hiringOrganization.setOrganizationType(OrganizationType.C);
+        } else if(value.equals("E")) {
+            hiringOrganization.setOrganizationType(OrganizationType.E);
+        }
         hiringOrganization.setUser(user);
         hiringOrganization.setName(hrSignupRequest.getName());
         hiringOrganization.setPhoneNumber(hrSignupRequest.getPhone_number());
