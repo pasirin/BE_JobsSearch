@@ -83,9 +83,5 @@ public class CommonController {
         return ResponseEntity.ok().body(urls);
     }
 
-    @GetMapping("/jobs/search")
-    public ResponseEntity<?> searchJobs(@Valid @RequestParam String city, @RequestParam LocalTime startTime, @RequestParam LocalTime endTime) {
-        Collection<Job> jobs = jobService.searchJobs(city, startTime, endTime);
-        return ResponseEntity.ok().body(jobs);
-    }
+
 }

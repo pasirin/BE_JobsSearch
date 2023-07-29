@@ -12,9 +12,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.*;
+import java.io.IOException;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -63,6 +68,9 @@ public class JobService {
     @Autowired
     SalaryRepository salaryRepository;
 
+    @Autowired
+    EntityManager entityManager;
+
     public Collection<Job> getAll() {
         return jobRepository.findAll();
     }
@@ -87,25 +95,41 @@ public class JobService {
     /**
      * Định nghĩa hàm tìm kiếm cơ bản
      */
-    public Collection<Job> searchJobs(String city, LocalTime startTime, LocalTime endTime) {
-        Specification<Job> specification =
-                Specification.where(hasCity(city)).and(hasStartTime(startTime)).and(hasEndTime(endTime));
-        if (specification == null) {
-            return null;
+    public ResponseObject searchJobs(Long userId, JobSearchRequest jobSearchRequest) {
+        if (seekerRepository.findByUserId(userId).isEmpty()) {
+            return ResponseObject.message("There Aren't any seeker with the requested id");
         }
-        return jobRepository.findAll(specification);
-    }
+        Seeker seeker = seekerRepository.findByUserId(userId).get();
 
-    public Collection<Job> searchJobs(Long userId, JobSearchRequest jobSearchRequest) {
-        Seeker seeker =
-                seekerRepository
-                        .findByUserId(userId)
-                        .orElseThrow(() -> new RuntimeException("Seeker not found with id: " + userId));
+        Specification<Job> specification = Specification.where(null);
 
-        Specification<Job> specification =
-                Specification.where(hasCity(jobSearchRequest.getLocation1()))
-                        .and(hasStartTime(jobSearchRequest.getStartTime()))
-                        .and(hasEndTime(jobSearchRequest.getEndTime()));
+        List<String> cityName = new ArrayList<>();
+
+        if (jobSearchRequest.getLocation1() != null && !jobSearchRequest.getLocation1().isEmpty()) {
+            cityName.add(jobSearchRequest.getLocation1());
+        }
+        if (jobSearchRequest.getStartTime() != null) {
+            specification = specification.and(hasStartTime(jobSearchRequest.getStartTime()));
+        }
+        if (jobSearchRequest.getEndTime() != null) {
+            specification = specification.and(hasEndTime(jobSearchRequest.getEndTime()));
+        }
+        if (jobSearchRequest.getAdvanceSearch() != null && jobSearchRequest.getAdvanceSearch()) {
+            if (jobSearchRequest.getLocation2() != null && !jobSearchRequest.getLocation2().isEmpty()) {
+                cityName.add(jobSearchRequest.getLocation2());
+            }
+            if (jobSearchRequest.getLocation3() != null && !jobSearchRequest.getLocation3().isEmpty()) {
+                cityName.add(jobSearchRequest.getLocation3());
+            }
+            if (jobSearchRequest.getTagId() != null && !jobSearchRequest.getTagId().isEmpty()) {
+                specification = specification.and(hasSearchTag(jobSearchRequest.getTagId()));
+            }
+        }
+
+        if (!cityName.isEmpty()) {
+            specification = specification.and(hasCity(cityName));
+        }
+
         // Lấy danh sách công việc theo các điều kiện tìm kiếm
         List<Job> jobs = jobRepository.findAll(specification);
 
@@ -117,23 +141,41 @@ public class JobService {
                                         seeker.getHistories().stream()
                                                 .noneMatch(history -> history.getJob().getId().equals(job.getId())))
                         .collect(Collectors.toList());
+        if (jobSearchRequest.getOnly_meta() != null && jobSearchRequest.getOnly_meta()) {
+            return ResponseObject.ok().setData(filteredJobs.size());
+        }
 
-        return filteredJobs;
+        return ResponseObject.ok().setData(filteredJobs);
     }
 
-    private Specification<Job> hasCity(String city) {
-        return (root, query, criteriaBuilder) ->
-                criteriaBuilder.equal(root.join("location").get("city"), city);
+    private Specification<Job> hasCity(List<String> city) {
+        return (root, query, criteriaBuilder) -> {
+            if (city != null && !city.isEmpty()) {
+                return root.join("location").get("city").in(city);
+            } else {
+                return criteriaBuilder.and();
+            }
+        };
     }
 
     private Specification<Job> hasStartTime(LocalTime startTime) {
         return (root, query, criteriaBuilder) ->
-                criteriaBuilder.greaterThanOrEqualTo(root.join("working_hour").get("start_time"), startTime);
+                criteriaBuilder.greaterThanOrEqualTo(root.join("workingHours").get("start"), startTime);
     }
 
     private Specification<Job> hasEndTime(LocalTime endTime) {
         return (root, query, criteriaBuilder) ->
-                criteriaBuilder.lessThanOrEqualTo(root.join("working_hour").get("end_time"), endTime);
+                criteriaBuilder.lessThanOrEqualTo(root.join("workingHours").get("end"), endTime);
+    }
+
+    private Specification<Job> hasSearchTag(List<Long> tagId) {
+        return (root, query, criteriaBuilder) -> {
+            if (tagId != null && !tagId.isEmpty()) {
+                return root.join("searchLabels").get("id").in(tagId);
+            } else {
+                return criteriaBuilder.and();
+            }
+        };
     }
 
     /**
@@ -231,18 +273,25 @@ public class JobService {
                             });
         }
         PhotoGallery photoGallery = new PhotoGallery(galleryList, !galleryList.isEmpty());
-        photoGallery = photoGalleryRepository.save(photoGallery);
 
         // Search label handling
         List<SearchLabel> labels = new ArrayList<>();
-        request
-                .getSearchLabelIds()
-                .forEach(
-                        Id -> {
-                            if (searchLabelRepository.findById(Id).isPresent()) {
-                                labels.add(searchLabelRepository.findById(Id).get());
-                            }
-                        });
+        try {
+            if (request.getSearchLabelIds() != null) {
+                request
+                        .getSearchLabelIds()
+                        .forEach(
+                                Id -> {
+                                    if (searchLabelRepository.findById(Id).isPresent()) {
+                                        labels.add(searchLabelRepository.findById(Id).get());
+                                    } else {
+                                        throw new RuntimeException();
+                                    }
+                                });
+            }
+        } catch (RuntimeException e) {
+            return ResponseObject.message("The requested search Label doesn't exist");
+        }
 
         // Web Application handling
         WebApplication webApplication = new WebApplication();
@@ -328,7 +377,6 @@ public class JobService {
         salary.setHourlyText(request.getSalary().getHourlyText());
         salary.setMonthlyText(request.getSalary().getMonthlyText());
         salary.setType(request.getSalary().getType());
-        salary = salaryRepository.save(salary);
 
         // Compiling together to one Job object
         Job job =
@@ -367,7 +415,6 @@ public class JobService {
         return null;
     }
 
-    @Transactional
     public ResponseObject delete(Long userId, Long jobId) {
         HiringOrganization organization = hiringOrganizationRepository.findByUserId(userId).orElse(null);
         if (organization == null) {

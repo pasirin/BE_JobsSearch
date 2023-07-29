@@ -36,8 +36,11 @@ public class AdminController {
   }
 
   @GetMapping("/seekers/q")
-  public ResponseEntity<?> searchSeeker(@Valid @RequestParam String s) {
-    return ResponseEntity.ok().body(seekerService.getByName(s));
+  public ResponseEntity<?> searchSeeker(
+      @RequestParam(required = false) String email,
+      @RequestParam(required = false) String name,
+      @RequestParam(required = false) String phoneNumber) {
+    return ResponseEntity.ok().body(seekerService.searchQuery(email, name, phoneNumber));
   }
 
   @GetMapping("/seeker/{id}")
@@ -98,8 +101,11 @@ public class AdminController {
   }
 
   @GetMapping("/users/q")
-  public ResponseEntity<?> searchUsername(@Valid @RequestParam String s) {
-    return ResponseEntity.ok().body(userService.getByName(s));
+  public ResponseEntity<?> searchUsername(
+      @RequestParam(required = false) String email,
+      @RequestParam(required = false) String username,
+      @RequestParam(required = false) EStatus status) {
+    return ResponseEntity.ok().body(userService.searchQuery(email, username, status));
   }
 
   @GetMapping("/users/{id}")

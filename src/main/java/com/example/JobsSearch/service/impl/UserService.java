@@ -30,6 +30,13 @@ public class UserService {
     return userRepository.findByUsernameLike("%" + name + "%");
   }
 
+  public Collection<User> searchQuery(String email, String username, EStatus status) {
+    return userRepository.findByEmailLikeAndUsernameLikeAndStatus(
+        "%" + (email == null ? "" : email) + "%",
+        "%" + (username == null ? "" : username) + "%",
+        status);
+  }
+
   public ResponseObject getById(Long id) {
     if (userRepository.findById(id).isEmpty()) {
       return ResponseObject.message("There Aren't any user with the requested Id");

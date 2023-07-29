@@ -29,11 +29,9 @@ import java.util.Optional;
 @PreAuthorize("hasRole('ROLE_HR')")
 public class HiringOrganizationController {
 
-    @Autowired
-    HiringOrganizationService hiringOrganizationService;
+    @Autowired HiringOrganizationService hiringOrganizationService;
 
-    @Autowired
-    JobService jobService;
+    @Autowired JobService jobService;
 
     @GetMapping("/profile")
     public ResponseEntity<?> getProfile() {
@@ -66,21 +64,11 @@ public class HiringOrganizationController {
                 : ResponseEntity.badRequest().body(output.getMessage());
     }
 
-    @PostMapping(value = "/jobs", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/jobs")
     public ResponseEntity<?> createJob(@RequestBody JobRequest jobRequest) {
         UserDetailsImpl userDetails =
                 (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         ResponseObject output = jobService.create(userDetails.getId(), jobRequest);
-        return output.getStatus()
-                ? ResponseEntity.ok().build()
-                : ResponseEntity.badRequest().body(output.getMessage());
-    }
-
-    @DeleteMapping("/jobs/{jobId}")
-    public ResponseEntity<?> deleteJob(@Valid @PathVariable Long jobId) {
-        UserDetailsImpl userDetails =
-                (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        ResponseObject output = jobService.delete(userDetails.getId(), jobId);
         return output.getStatus()
                 ? ResponseEntity.ok().build()
                 : ResponseEntity.badRequest().body(output.getMessage());

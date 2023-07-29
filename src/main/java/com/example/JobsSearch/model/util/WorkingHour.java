@@ -20,16 +20,16 @@ public class WorkingHour {
     private Long id;
     private Integer hours;
 
-    private LocalTime start_time;
+    private LocalTime start;
 
-    private LocalTime end_time;
+    private LocalTime end;
 
     private Boolean is_full_time = false;
 
-    public WorkingHour(Integer hours, LocalTime start_time, LocalTime end_time, Boolean is_full_time) {
+    public WorkingHour(Integer hours, LocalTime start, LocalTime end, Boolean is_full_time) {
         this.hours = hours;
-        this.start_time = start_time;
-        this.end_time = end_time;
+        this.start = start;
+        this.end = end;
         this.is_full_time = is_full_time;
     }
 }

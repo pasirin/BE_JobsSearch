@@ -1,5 +1,6 @@
 package com.example.JobsSearch.model;
 
+import io.swagger.models.auth.In;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -34,7 +35,7 @@ public class News {
     private LocalDateTime expiresAt;
     private String title;
     private String subTitle;
-    private String category;
+    private Integer category;   //1: Seminar , 2: corporate recruiting session, 3: general information
     private String body;
     private String eventPageUrl;
     private LocalDateTime eventStartAt;
@@ -43,7 +44,7 @@ public class News {
     public News() {
     }
 
-    public News(LocalDateTime opensAt, LocalDateTime expiresAt, String title, String subTitle, String category, String body, String eventPageUrl, LocalDateTime eventStartAt, LocalDateTime eventEndAt) {
+    public News(LocalDateTime opensAt, LocalDateTime expiresAt, String title, String subTitle, Integer category, String body, String eventPageUrl, LocalDateTime eventStartAt, LocalDateTime eventEndAt) {
 
         this.opensAt = opensAt;
         this.expiresAt = expiresAt;
@@ -100,11 +101,11 @@ public class News {
         this.subTitle = subTitle;
     }
 
-    public String getCategory() {
+    public Integer getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(Integer category) {
         this.category = category;
     }
 
