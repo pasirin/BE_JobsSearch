@@ -40,7 +40,7 @@ public class Job {
 
   private LocalDate expiresAt;
 
-  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
   @JoinColumn(name = "mainImageId")
   @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
   private Image mainImage;
@@ -81,7 +81,7 @@ public class Job {
   private String catchText;
   private String leadText;
 
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
   @JoinColumn(name = "job_id")
   @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
   private List<Image> subImages;
@@ -193,5 +193,10 @@ public class Job {
     this.photoGallery = photoGallery;
     this.interview = interview;
     this.productCode = productCode;
+  }
+
+  @Transient
+  public Long getHRId() {
+    return this.organization.getId();
   }
 }

@@ -29,58 +29,68 @@ import java.util.Optional;
 @PreAuthorize("hasRole('ROLE_HR')")
 public class HiringOrganizationController {
 
-    @Autowired HiringOrganizationService hiringOrganizationService;
+  @Autowired HiringOrganizationService hiringOrganizationService;
 
-    @Autowired JobService jobService;
+  @Autowired JobService jobService;
 
-    @GetMapping("/profile")
-    public ResponseEntity<?> getProfile() {
-        UserDetailsImpl userDetails =
-                (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        ResponseObject output = hiringOrganizationService.getProfile(userDetails.getId());
-        return output.getStatus()
-                ? ResponseEntity.ok().body(output.getData())
-                : ResponseEntity.badRequest().body(output.getMessage());
-    }
+  @GetMapping("/profile")
+  public ResponseEntity<?> getProfile() {
+    UserDetailsImpl userDetails =
+        (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    ResponseObject output = hiringOrganizationService.getProfile(userDetails.getId());
+    return output.getStatus()
+        ? ResponseEntity.ok().body(output.getData())
+        : ResponseEntity.badRequest().body(output.getMessage());
+  }
 
-    @PutMapping("/profile/update")
-    public ResponseEntity<?> updateHrProfile(
-            @RequestBody HrUpdateProfileRequest hrUpdateProfileRequest) {
-        ResponseObject output =
-                hiringOrganizationService.updateProfile(
-                        SecurityContextHolder.getContext().getAuthentication(), hrUpdateProfileRequest);
-        return output.getStatus()
-                ? ResponseEntity.ok().body(output.getData())
-                : ResponseEntity.badRequest().body(output.getMessage());
-    }
+  @PutMapping("/profile/update")
+  public ResponseEntity<?> updateHrProfile(
+      @RequestBody HrUpdateProfileRequest hrUpdateProfileRequest) {
+    ResponseObject output =
+        hiringOrganizationService.updateProfile(
+            SecurityContextHolder.getContext().getAuthentication(), hrUpdateProfileRequest);
+    return output.getStatus()
+        ? ResponseEntity.ok().body(output.getData())
+        : ResponseEntity.badRequest().body(output.getMessage());
+  }
 
-    @GetMapping("/jobs")
-    public ResponseEntity<?> getAllJobsByOrganization() {
-        UserDetailsImpl userDetails =
-                (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        ResponseObject output = jobService.getAllJobsByOrganization(userDetails.getId());
-        return output.getStatus()
-                ? ResponseEntity.ok().body(output.getData())
-                : ResponseEntity.badRequest().body(output.getMessage());
-    }
+  @GetMapping("/jobs")
+  public ResponseEntity<?> getAllJobsByOrganization() {
+    UserDetailsImpl userDetails =
+        (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    ResponseObject output = jobService.getAllJobsByOrganization(userDetails.getId());
+    return output.getStatus()
+        ? ResponseEntity.ok().body(output.getData())
+        : ResponseEntity.badRequest().body(output.getMessage());
+  }
 
-    @PostMapping(value = "/jobs")
-    public ResponseEntity<?> createJob(@RequestBody JobRequest jobRequest) {
-        UserDetailsImpl userDetails =
-                (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        ResponseObject output = jobService.create(userDetails.getId(), jobRequest);
-        return output.getStatus()
-                ? ResponseEntity.ok().build()
-                : ResponseEntity.badRequest().body(output.getMessage());
-    }
+  @PostMapping(value = "/jobs")
+  public ResponseEntity<?> createJob(@RequestBody JobRequest jobRequest) {
+    UserDetailsImpl userDetails =
+        (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    ResponseObject output = jobService.create(userDetails.getId(), jobRequest);
+    return output.getStatus()
+        ? ResponseEntity.ok().build()
+        : ResponseEntity.badRequest().body(output.getMessage());
+  }
 
-    @DeleteMapping("/jobs/delete/{jobId}")
-    public ResponseEntity<?> deleteJob(@PathVariable Long jobId) {
-        UserDetailsImpl userDetails =
-                (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        ResponseObject output = jobService.delete(userDetails.getId(), jobId);
-        return output.getStatus()
-                ? ResponseEntity.ok().build()
-                : ResponseEntity.badRequest().body(output.getMessage());
-    }
+  @PutMapping(value = "/jobs/{id}")
+  public ResponseEntity<?> updateJob(@PathVariable Long id, @RequestBody JobRequest jobRequest) {
+    UserDetailsImpl userDetails =
+        (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    ResponseObject output = jobService.update(id, userDetails.getId(), jobRequest);
+    return output.getStatus()
+        ? ResponseEntity.ok().build()
+        : ResponseEntity.badRequest().body(output.getMessage());
+  }
+
+  @DeleteMapping("/jobs/{jobId}")
+  public ResponseEntity<?> deleteJob(@PathVariable Long jobId) {
+    UserDetailsImpl userDetails =
+        (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    ResponseObject output = jobService.delete(userDetails.getId(), jobId);
+    return output.getStatus()
+        ? ResponseEntity.ok().build()
+        : ResponseEntity.badRequest().body(output.getMessage());
+  }
 }

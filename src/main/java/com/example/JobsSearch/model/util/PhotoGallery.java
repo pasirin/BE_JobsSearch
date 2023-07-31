@@ -12,7 +12,7 @@ public class PhotoGallery {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "photo_gallery_id")
     private List<Image> contents;
     private Boolean isDisplayed;
