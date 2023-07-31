@@ -29,9 +29,11 @@ import java.util.Optional;
 @PreAuthorize("hasRole('ROLE_HR')")
 public class HiringOrganizationController {
 
-    @Autowired HiringOrganizationService hiringOrganizationService;
+    @Autowired
+    HiringOrganizationService hiringOrganizationService;
 
-    @Autowired JobService jobService;
+    @Autowired
+    JobService jobService;
 
     @GetMapping("/profile")
     public ResponseEntity<?> getProfile() {
@@ -64,7 +66,7 @@ public class HiringOrganizationController {
                 : ResponseEntity.badRequest().body(output.getMessage());
     }
 
-    @PostMapping(value = "/jobs")
+    @PostMapping(value = "/jobs/create")
     public ResponseEntity<?> createJob(@RequestBody JobRequest jobRequest) {
         UserDetailsImpl userDetails =
                 (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -83,4 +85,18 @@ public class HiringOrganizationController {
                 ? ResponseEntity.ok().build()
                 : ResponseEntity.badRequest().body(output.getMessage());
     }
+
+
+    @PutMapping(value = "/jobs/{id}/update")
+    public ResponseEntity<?> updateJob(@PathVariable Long id, @RequestBody JobRequest jobRequest) {
+        UserDetailsImpl userDetails =
+                (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        ResponseObject output = jobService.update(id, userDetails.getId(), jobRequest);
+        return output.getStatus()
+                ? ResponseEntity.ok().build()
+                : ResponseEntity.badRequest().body(output.getMessage());
+    }
+
+
 }
+
