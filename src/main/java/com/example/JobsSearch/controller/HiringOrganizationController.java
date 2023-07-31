@@ -73,4 +73,14 @@ public class HiringOrganizationController {
                 ? ResponseEntity.ok().build()
                 : ResponseEntity.badRequest().body(output.getMessage());
     }
+
+    @DeleteMapping("/jobs/delete/{jobId}")
+    public ResponseEntity<?> deleteJob(@PathVariable Long jobId) {
+        UserDetailsImpl userDetails =
+                (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        ResponseObject output = jobService.delete(userDetails.getId(), jobId);
+        return output.getStatus()
+                ? ResponseEntity.ok().build()
+                : ResponseEntity.badRequest().body(output.getMessage());
+    }
 }
