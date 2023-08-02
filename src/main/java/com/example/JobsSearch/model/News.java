@@ -1,6 +1,5 @@
 package com.example.JobsSearch.model;
 
-import io.swagger.models.auth.In;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;

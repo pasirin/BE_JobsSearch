@@ -1,6 +1,5 @@
 package com.example.JobsSearch.payload.Request;
 
-import com.example.JobsSearch.model.util.*;
 import com.example.JobsSearch.payload.Request.UtilRequest.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
@@ -9,7 +8,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**

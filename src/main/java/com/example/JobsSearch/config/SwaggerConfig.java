@@ -1,12 +1,7 @@
 package com.example.JobsSearch.config;
 
-import com.example.JobsSearch.payload.Request.JobRequest;
-import com.example.JobsSearch.payload.Request.UtilRequest.PropertyRequest;
-import com.example.JobsSearch.payload.Request.UtilRequest.WorkingHourRequest;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.*;
@@ -16,7 +11,6 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.time.LocalTime;
-import java.util.Arrays;
 import java.util.List;
 
 @Configuration
