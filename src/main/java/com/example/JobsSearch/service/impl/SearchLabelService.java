@@ -33,7 +33,7 @@ public class SearchLabelService implements ServiceCRUD<SearchLabelRequest, Searc
     }
     SearchLabel searchLabel = searchLabelRepository.findById(id).get();
     searchLabel.setName(searchLabelRequest.getName());
-    searchLabel.setIs_enabled(searchLabelRequest.getIs_enable());
+    searchLabel.setIsEnabled(searchLabelRequest.getIs_enable());
     searchLabelRepository.save(searchLabel);
     return ResponseObject.ok();
   }

@@ -15,15 +15,13 @@ public class PhotoGallery {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "photo_gallery_id")
     private List<Image> contents;
-    private Boolean isDisplayed;
 
     public PhotoGallery(Long id) {
         this.id = id;
     }
 
-    public PhotoGallery(List<Image> contents, Boolean isDisplayed) {
+    public PhotoGallery(List<Image> contents) {
         this.contents = contents;
-        this.isDisplayed = isDisplayed;
     }
 
     public PhotoGallery() {
@@ -40,14 +38,6 @@ public class PhotoGallery {
 
     public void setContents(List<Image> contents) {
         this.contents = contents;
-    }
-
-    public Boolean getDisplayed() {
-        return isDisplayed;
-    }
-
-    public void setDisplayed(Boolean displayed) {
-        isDisplayed = displayed;
     }
 }
 
