@@ -22,7 +22,6 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "users")
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
 @NoArgsConstructor
 public class User {

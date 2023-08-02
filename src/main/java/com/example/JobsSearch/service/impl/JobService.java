@@ -12,14 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.EntityManager;
-import javax.persistence.criteria.*;
-import java.io.IOException;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -119,7 +113,7 @@ public class JobService {
                     seeker.getHistories().stream()
                         .noneMatch(history -> history.getJob().getId().equals(job.getId())))
             .collect(Collectors.toList());
-    if (jobSearchRequest.getOnly_meta() != null && jobSearchRequest.getOnly_meta()) {
+    if (jobSearchRequest.getOnlyMeta() != null && jobSearchRequest.getOnlyMeta()) {
       return ResponseObject.ok().setData(filteredJobs.size());
     }
 
@@ -275,9 +269,9 @@ public class JobService {
     WebApplication webApplication = new WebApplication();
     if (!request.getWebApplicationUrl().isEmpty()) {
       webApplication.setUrl(request.getWebApplicationUrl());
-      webApplication.setIs_available(true);
+      webApplication.setIsAvailable(true);
     } else {
-      webApplication.setIs_available(false);
+      webApplication.setIsAvailable(false);
     }
 
     // Post Script Handling
@@ -299,9 +293,9 @@ public class JobService {
               WorkingHour workingHour =
                   new WorkingHour(
                       workingHourRequest.getHours(),
-                      workingHourRequest.getStart_time(),
-                      workingHourRequest.getEnd_time(),
-                      workingHourRequest.getIs_full_time());
+                      workingHourRequest.getStartTime(),
+                      workingHourRequest.getEndTime(),
+                      workingHourRequest.getIsFullTime());
               workingHour = workingHourRepository.save(workingHour);
               workingHours.add(workingHour);
             });
@@ -316,8 +310,8 @@ public class JobService {
                   new Property(
                       propertyRequest.getBody(),
                       propertyRequest.getTitle(),
-                      propertyRequest.getSort_order(),
-                      propertyRequest.getIs_displayed());
+                      propertyRequest.getSortOrder(),
+                      propertyRequest.getIsDisplayed());
               property = propertyRepository.save(property);
               properties.add(property);
             });
@@ -471,9 +465,9 @@ public class JobService {
               WorkingHour workingHour =
                   new WorkingHour(
                       workingHourRequest.getHours(),
-                      workingHourRequest.getStart_time(),
-                      workingHourRequest.getEnd_time(),
-                      workingHourRequest.getIs_full_time());
+                      workingHourRequest.getStartTime(),
+                      workingHourRequest.getEndTime(),
+                      workingHourRequest.getIsFullTime());
               workingHour = workingHourRepository.save(workingHour);
               oldWorkingHours.add(workingHour);
             });
@@ -503,9 +497,9 @@ public class JobService {
     WebApplication oldWebApplication = job.getWebApplication();
     if (!jobRequest.getWebApplicationUrl().isEmpty()) {
       oldWebApplication.setUrl(jobRequest.getWebApplicationUrl());
-      oldWebApplication.setIs_available(true);
+      oldWebApplication.setIsAvailable(true);
     } else {
-      oldWebApplication.setIs_available(false);
+      oldWebApplication.setIsAvailable(false);
     }
 
     // Post Script
@@ -557,8 +551,8 @@ public class JobService {
                   new Property(
                       propertyRequest.getBody(),
                       propertyRequest.getTitle(),
-                      propertyRequest.getSort_order(),
-                      propertyRequest.getIs_displayed());
+                      propertyRequest.getSortOrder(),
+                      propertyRequest.getIsDisplayed());
               property = propertyRepository.save(property);
               oldProperties.add(property);
             });

@@ -21,7 +21,7 @@ public class SearchLabelService implements ServiceCRUD<SearchLabelRequest, Searc
       return ResponseObject.message("There's already a label with that name");
     }
     SearchLabel searchLabel =
-        new SearchLabel(searchLabelRequest.getName(), searchLabelRequest.getIs_enable());
+        new SearchLabel(searchLabelRequest.getName(), searchLabelRequest.getIsEnable());
     searchLabelRepository.save(searchLabel);
     return ResponseObject.ok();
   }
@@ -33,7 +33,7 @@ public class SearchLabelService implements ServiceCRUD<SearchLabelRequest, Searc
     }
     SearchLabel searchLabel = searchLabelRepository.findById(id).get();
     searchLabel.setName(searchLabelRequest.getName());
-    searchLabel.setIs_enabled(searchLabelRequest.getIs_enable());
+    searchLabel.setIsEnabled(searchLabelRequest.getIsEnable());
     searchLabelRepository.save(searchLabel);
     return ResponseObject.ok();
   }

@@ -153,7 +153,7 @@ public class AuthService {
         }
         hiringOrganization.setUser(user);
         hiringOrganization.setName(hrSignupRequest.getName());
-        hiringOrganization.setPhoneNumber(hrSignupRequest.getPhone_number());
+        hiringOrganization.setPhoneNumber(hrSignupRequest.getPhoneNumber());
         hiringOrganization.setWebsite(hrSignupRequest.getWebsite());
         hiringOrganization.setAddress(hrSignupRequest.getAddress());
         hiringOrganization.setIntroduction(hrSignupRequest.getIntroduction());

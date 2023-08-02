@@ -6,7 +6,7 @@ import lombok.Data;
 public class HrUpdateProfileRequest {
     private String name;
 
-    private String phone_number;
+    private String phoneNumber;
 
     private String website;
 
