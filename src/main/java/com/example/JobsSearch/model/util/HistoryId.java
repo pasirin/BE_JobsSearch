@@ -2,7 +2,6 @@ package com.example.JobsSearch.model.util;
 
 import com.example.JobsSearch.model.Job;
 import com.example.JobsSearch.model.Seeker;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Embeddable;

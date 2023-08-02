@@ -76,7 +76,7 @@ public class SeekerService {
     seeker.setOther_details(seekerUpdateRequest.getOther_details());
     if (!seeker.getPhoto().isEmpty()) {
       try {
-        String result = imageUploadService.deleteImage(seeker.getPhoto());
+        imageUploadService.deleteImage(seeker.getPhoto());
       } catch (IOException e) {
         logger.error(String.valueOf(e));
       }

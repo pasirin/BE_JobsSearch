@@ -10,12 +10,9 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Collection;
-import java.util.Optional;
-import java.util.Scanner;
+import java.util.*;
 
 @Service
 public class LocationService {
@@ -25,17 +22,74 @@ public class LocationService {
   @EventListener
   @SneakyThrows
   public void initLocation(ApplicationReadyEvent event) {
-    ClassLoader classLoader = getClass().getClassLoader();
-    InputStream in = classLoader.getResourceAsStream("src/main/resources/Location.txt");
-    if (in == null) {
-      logger.error("Could not find location text file at: src/main/resources/Location.txt");
-      return;
-    }
-    Scanner scanner = new Scanner(new InputStreamReader(in));
-    while (scanner.hasNextLine()) {
-      String temp = scanner.nextLine();
-      if (!locationRepository.existsByCity(temp)) {
-        Location location = new Location(temp);
+    List<String> locations =
+        Arrays.asList(
+            "Hà Nội",
+            "Hà Giang",
+            "Cao Bằng",
+            "Bắc Kạn",
+            "Tuyên Quang",
+            "Lào Cai",
+            "Điện Biên",
+            "Lai Châu",
+            "Sơn La",
+            "Yên Bái",
+            "Hoà Bình",
+            "Thái Nguyên",
+            "Lạng Sơn",
+            "Quảng Ninh",
+            "Bắc Giang",
+            "Phú Thọ",
+            "Vĩnh Phúc",
+            "Bắc Ninh",
+            "Hải Dương",
+            "Hải Phòng",
+            "Hưng Yên",
+            "Thái Bình",
+            "Hà Nam",
+            "Nam Định",
+            "Ninh Bình",
+            "Thanh Hóa",
+            "Nghệ An",
+            "Hà Tĩnh",
+            "Quảng Bình",
+            "Quảng Trị",
+            "Thừa Thiên Huế",
+            "Đà Nẵng",
+            "Quảng Nam",
+            "Quảng Ngãi",
+            "Bình Định",
+            "Phú Yên",
+            "Khánh Hòa",
+            "Ninh Thuận",
+            "Bình Thuận",
+            "Kon Tum",
+            "Gia Lai",
+            "Đắk Lắk",
+            "Đắk Nông",
+            "Lâm Đồng",
+            "Bình Phước",
+            "Tây Ninh",
+            "Bình Dương",
+            "Đồng Nai",
+            "Bà Rịa - Vũng Tàu",
+            "Hồ Chí Minh",
+            "Long An",
+            "Tiền Giang",
+            "Bến Tre",
+            "Trà Vinh",
+            "Vĩnh Long",
+            "Đồng Tháp",
+            "An Giang",
+            "Kiên Giang",
+            "Cần Thơ",
+            "Hậu Giang",
+            "Sóc Trăng",
+            "Bạc Liêu",
+            "Cà Mau");
+    for (String locationString : locations) {
+      if (!locationRepository.existsByCity(locationString)) {
+        Location location = new Location(locationString);
         locationRepository.save(location);
       }
     }

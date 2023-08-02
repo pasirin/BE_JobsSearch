@@ -8,7 +8,6 @@ import com.example.JobsSearch.security.UserDetailsImpl;
 import com.example.JobsSearch.service.impl.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -20,8 +19,6 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
-    @Autowired
-    private AuthenticationManager authenticationManager;
     @Autowired
     private AuthService authService;
 

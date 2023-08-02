@@ -1,6 +1,5 @@
 package com.example.JobsSearch.controller;
 
-import com.example.JobsSearch.model.Job;
 import com.example.JobsSearch.model.util.InteractionType;
 import com.example.JobsSearch.payload.Request.JobSearchRequest;
 import com.example.JobsSearch.payload.Request.SeekerUpdateRequest;
@@ -13,10 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.util.Collection;
 
 @RestController
 @RequestMapping("/seeker")
