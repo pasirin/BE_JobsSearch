@@ -12,14 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.EntityManager;
-import javax.persistence.criteria.*;
-import java.io.IOException;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -250,7 +244,7 @@ public class JobService {
                 galleryList.add(savedImage);
               });
     }
-    PhotoGallery photoGallery = new PhotoGallery(galleryList, !galleryList.isEmpty());
+    PhotoGallery photoGallery = new PhotoGallery(galleryList);
 
     // Search label handling
     List<SearchLabel> labels = new ArrayList<>();
@@ -275,9 +269,9 @@ public class JobService {
     WebApplication webApplication = new WebApplication();
     if (!request.getWebApplicationUrl().isEmpty()) {
       webApplication.setUrl(request.getWebApplicationUrl());
-      webApplication.setIs_available(true);
+      webApplication.setIsAvailable(true);
     } else {
-      webApplication.setIs_available(false);
+      webApplication.setIsAvailable(false);
     }
 
     // Post Script Handling
@@ -462,7 +456,7 @@ public class JobService {
     job.setSalary(newSalary);
 
     // Working Hours
-    List<WorkingHour> oldWorkingHours = job.getWorking_hour();
+    List<WorkingHour> oldWorkingHours = job.getWorkingHours();
     oldWorkingHours.clear();
     jobRequest
         .getWorkingHours()
@@ -503,9 +497,9 @@ public class JobService {
     WebApplication oldWebApplication = job.getWebApplication();
     if (!jobRequest.getWebApplicationUrl().isEmpty()) {
       oldWebApplication.setUrl(jobRequest.getWebApplicationUrl());
-      oldWebApplication.setIs_available(true);
+      oldWebApplication.setIsAvailable(true);
     } else {
-      oldWebApplication.setIs_available(false);
+      oldWebApplication.setIsAvailable(false);
     }
 
     // Post Script
@@ -600,7 +594,7 @@ public class JobService {
                 newGalleryList.add(savedImage);
               });
     }
-    PhotoGallery newPhotoGallery = new PhotoGallery(newGalleryList, !newGalleryList.isEmpty());
+    PhotoGallery newPhotoGallery = new PhotoGallery(newGalleryList);
     job.setPhotoGallery(newPhotoGallery);
 
     // Interview

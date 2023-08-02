@@ -18,18 +18,18 @@ public class WorkingHour {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Integer hours;
+    private Integer countHours;
 
-    private LocalTime start;
+    private LocalTime startTime;
 
-    private LocalTime end;
+    private LocalTime endTime;
 
-    private Boolean is_full_time = false;
+    private Boolean isFullTime = false;
 
-    public WorkingHour(Integer hours, LocalTime start, LocalTime end, Boolean is_full_time) {
-        this.hours = hours;
-        this.start = start;
-        this.end = end;
-        this.is_full_time = is_full_time;
+    public WorkingHour(Integer countHours, LocalTime startTime, LocalTime endTime, Boolean isFullTime) {
+        this.countHours = countHours;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.isFullTime = isFullTime;
     }
 }
