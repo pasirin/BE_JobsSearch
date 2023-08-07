@@ -3,4 +3,3 @@ VOLUME /tmp
 COPY target/*.jar JobsSearch.jar
 ENTRYPOINT ["java","-jar","/JobsSearch.jar"]
 EXPOSE 8080
-
