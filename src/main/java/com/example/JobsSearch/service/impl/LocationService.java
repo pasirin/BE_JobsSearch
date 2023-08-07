@@ -16,7 +16,6 @@ import java.util.*;
 
 @Service
 public class LocationService {
-  private static final Logger logger = LoggerFactory.getLogger(LocationService.class);
   @Autowired LocationRepository locationRepository;
 
   @EventListener
