@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 public class CommonController {
     private static final Logger logger = LoggerFactory.getLogger(CommonController.class);
