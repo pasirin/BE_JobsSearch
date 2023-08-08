@@ -12,6 +12,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/organizations")
@@ -50,6 +52,26 @@ public class HiringOrganizationController {
         UserDetailsImpl userDetails =
                 (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         ResponseObject output = jobService.getAllJobsByOrganization(userDetails.getId());
+        return output.getStatus()
+                ? ResponseEntity.ok().body(output.getData())
+                : ResponseEntity.badRequest().body(output.getMessage());
+    }
+
+    @GetMapping("/jobs/{jobId}")
+    public ResponseEntity<?> getJobById(@PathVariable @Valid Long jobId) {
+        UserDetailsImpl userDetails =
+                (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        ResponseObject output = jobService.getJobByIdByOrganization(userDetails.getId(), jobId);
+        return output.getStatus()
+                ? ResponseEntity.ok().body(output.getData())
+                : ResponseEntity.badRequest().body(output.getMessage());
+    }
+
+    @GetMapping("/jobs/{jobId}/seeker")
+    public ResponseEntity<?> getAllSeekerLikeJob(@PathVariable @Valid Long jobId) {
+        UserDetailsImpl userDetails =
+                (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        ResponseObject output = jobService.getLikedSeekerHistoriesByJobId(userDetails.getId(), jobId);
         return output.getStatus()
                 ? ResponseEntity.ok().body(output.getData())
                 : ResponseEntity.badRequest().body(output.getMessage());
