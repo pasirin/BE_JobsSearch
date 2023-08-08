@@ -20,76 +20,77 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
-    @Autowired
-    private AuthService authService;
+  @Autowired private AuthService authService;
 
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) {
-        return ResponseEntity.ok().body(authService.login(loginRequest));
+  @PostMapping("/login")
+  public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) {
+    return ResponseEntity.ok().body(authService.login(loginRequest));
+  }
+
+  @PostMapping("/seeker/signup")
+  public ResponseEntity<?> register(@Valid @RequestBody SeekerSignupRequest seekerSignupRequest) {
+    ResponseObject output = authService.seekerSignup(seekerSignupRequest);
+    return output.getStatus()
+        ? ResponseEntity.ok().body(output.getData())
+        : ResponseEntity.badRequest().body(output.getMessage());
+  }
+
+  @PostMapping("/organization/signup")
+  public ResponseEntity<?> hrRegister(@Valid @RequestBody HrSignupRequest hrSignupRequest) {
+    ResponseObject output = authService.hrSignup(hrSignupRequest);
+    return output.getStatus()
+        ? ResponseEntity.ok().body(output.getData())
+        : ResponseEntity.badRequest().body(output.getMessage());
+  }
+
+  @PostMapping("/logout")
+  public ResponseEntity<?> logout(HttpServletRequest request) {
+    // Lấy thông tin authentication của người dùng hiện tại
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+    if (authentication != null) {
+      // Xóa thông tin authentication và phiên làm việc hiện tại
+      new SecurityContextLogoutHandler().logout(request, null, authentication);
     }
 
-    @PostMapping("/seeker/signup")
-    public ResponseEntity<?> register(@Valid @RequestBody SeekerSignupRequest seekerSignupRequest) {
-        ResponseObject output = authService.seekerSignup(seekerSignupRequest);
-        return output.getStatus()
-                ? ResponseEntity.ok().body(output.getData())
-                : ResponseEntity.badRequest().body(output.getMessage());
-    }
+    return ResponseEntity.ok("Đăng xuất thành công");
+  }
 
-    @PostMapping("/organization/signup")
-    public ResponseEntity<?> hrRegister(@Valid @RequestBody HrSignupRequest hrSignupRequest) {
-        ResponseObject output = authService.hrSignup(hrSignupRequest);
-        return output.getStatus()
-                ? ResponseEntity.ok().body(output.getData())
-                : ResponseEntity.badRequest().body(output.getMessage());
-    }
+  @PostMapping("/change-password")
+  public ResponseEntity<?> changePassword(@Valid @RequestBody String password) {
+    UserDetailsImpl object =
+        (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    ResponseObject output =
+        authService.changePassword(object.getId(), object.getUsername(), password);
+    return output.getStatus()
+        ? ResponseEntity.ok().build()
+        : ResponseEntity.badRequest().body(output.getMessage());
+  }
 
-    @PostMapping("/logout")
-    public ResponseEntity<?> logout(HttpServletRequest request) {
-        // Lấy thông tin authentication của người dùng hiện tại
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+  @PutMapping("/users/{id}")
+  public ResponseEntity<?> changeEmail(@RequestBody String email) {
+    UserDetailsImpl object =
+        (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    ResponseObject output = authService.changeEmail(object.getId(), email);
+    return output.getStatus()
+        ? ResponseEntity.ok().build()
+        : ResponseEntity.badRequest().body(output.getMessage());
+  }
 
-        if (authentication != null) {
-            // Xóa thông tin authentication và phiên làm việc hiện tại
-            new SecurityContextLogoutHandler().logout(request, null, authentication);
-        }
+  @PostMapping("/forgot-password")
+  public ResponseEntity<?> forgotPassword(@Valid @RequestParam String email) {
+    ResponseObject output = authService.updateResetPasswordToken(email);
+    return output.getStatus()
+        ? ResponseEntity.ok().build()
+        : ResponseEntity.badRequest().body(output.getMessage());
+  }
 
-        return ResponseEntity.ok("Đăng xuất thành công");
-    }
-
-    @PostMapping("/change-password")
-    public ResponseEntity<?> changePassword(@Valid @RequestBody String password) {
-        UserDetailsImpl object =
-                (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        ResponseObject output =
-                authService.changePassword(object.getId(), object.getUsername(), password);
-        return output.getStatus()
-                ? ResponseEntity.ok().build()
-                : ResponseEntity.badRequest().body(output.getMessage());
-    }
-
-    @PutMapping("/users/{id}")
-    public ResponseEntity<?> changeEmail(@Valid @PathVariable Long id, @RequestBody String email) {
-        ResponseObject output = authService.changeEmail(id, email);
-        return output.getStatus()
-                ? ResponseEntity.ok().build()
-                : ResponseEntity.badRequest().body(output.getMessage());
-    }
-
-    @PostMapping("/forgot-password")
-    public ResponseEntity<?> forgotPassword(@Valid @RequestParam String email) {
-        ResponseObject output = authService.updateResetPasswordToken(email);
-        return output.getStatus()
-                ? ResponseEntity.ok().build()
-                : ResponseEntity.badRequest().body(output.getMessage());
-    }
-
-    @PostMapping("/reset-password")
-    public ResponseEntity<?> resetPassword(
-            @Valid @RequestParam String token, @RequestParam String newPassword) {
-        ResponseObject output = authService.resetPassword(token, newPassword);
-        return output.getStatus()
-                ? ResponseEntity.ok().build()
-                : ResponseEntity.badRequest().body(output.getMessage());
-    }
+  @PostMapping("/reset-password")
+  public ResponseEntity<?> resetPassword(
+      @Valid @RequestParam String token, @RequestParam String newPassword) {
+    ResponseObject output = authService.resetPassword(token, newPassword);
+    return output.getStatus()
+        ? ResponseEntity.ok().build()
+        : ResponseEntity.badRequest().body(output.getMessage());
+  }
 }
