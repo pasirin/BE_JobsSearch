@@ -67,7 +67,7 @@ public class AuthController {
         : ResponseEntity.badRequest().body(output.getMessage());
   }
 
-  @PutMapping("/users/{id}")
+  @PutMapping("/users")
   public ResponseEntity<?> changeEmail(@RequestBody String email) {
     UserDetailsImpl object =
         (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
