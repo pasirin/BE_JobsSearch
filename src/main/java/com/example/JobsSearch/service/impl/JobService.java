@@ -53,25 +53,20 @@ public class JobService {
     @Autowired
     PropertyRepository propertyRepository;
 
-    @Autowired
-    WebApplicationRepository webApplicationRepository;
 
     public Collection<Job> getAll() {
         return jobRepository.findAll();
     }
 
-    // lấy ra tất cả các job của organization
-    public ResponseObject getAllJobsByOrganization(Long userId) {
-        if (hiringOrganizationRepository.findByUserId(userId).isEmpty()) {
-            return ResponseObject.message("There Aren't any organization with the requested Id");
-        }
-        Long organizationId = hiringOrganizationRepository.findByUserId(userId).get().getId();
-        List<Job> jobList = jobRepository.findByOrganizationId(organizationId);
-        if (jobList.isEmpty()) {
-            return ResponseObject.ok().setMessage("There are no posts yet");
-        }
-        return ResponseObject.ok().setData(jobList);
+  // lấy ra tất cả các job của organization
+  public ResponseObject getAllJobsByOrganization(Long userId) {
+    if (hiringOrganizationRepository.findByUserId(userId).isEmpty()) {
+      return ResponseObject.message("There Aren't any organization with the requested Id");
     }
+    Long organizationId = hiringOrganizationRepository.findByUserId(userId).get().getId();
+    List<Job> jobList = jobRepository.findByOrganizationId(organizationId);
+    return ResponseObject.ok().setData(jobList);
+  }
 
     public ResponseObject getJobByIdByOrganization(Long userId, Long jobId) {
         if (hiringOrganizationRepository.findByUserId(userId).isEmpty()) {
