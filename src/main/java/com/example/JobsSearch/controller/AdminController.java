@@ -125,7 +125,7 @@ public class AdminController {
   }
 
   @PostMapping("/users/{id}/status")
-  public ResponseEntity<?> changeUserStatus(@PathVariable Long id, @Valid EStatus eStatus) {
+  public ResponseEntity<?> changeUserStatus(@PathVariable Long id, @RequestBody EStatus eStatus) {
     ResponseObject output = userService.setStatus(id, eStatus);
     return output.getStatus()
         ? ResponseEntity.ok().build()
