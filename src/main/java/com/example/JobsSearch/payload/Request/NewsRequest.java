@@ -19,7 +19,6 @@ public class NewsRequest {
     @NotBlank
     private String title;
 
-    @NotBlank
     private String subTitle;
 
     @NotNull
