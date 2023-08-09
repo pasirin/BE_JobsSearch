@@ -6,12 +6,14 @@ import com.example.JobsSearch.payload.Request.SearchLabelRequest;
 import com.example.JobsSearch.payload.Response.ResponseObject;
 import com.example.JobsSearch.service.impl.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -125,7 +127,7 @@ public class AdminController {
   }
 
   @PostMapping("/users/{id}/status")
-  public ResponseEntity<?> changeUserStatus(@PathVariable Long id, @RequestBody EStatus eStatus) {
+  public ResponseEntity<?> changeUserStatus(@PathVariable Long id, @RequestBody String eStatus) {
     ResponseObject output = userService.setStatus(id, eStatus);
     return output.getStatus()
         ? ResponseEntity.ok().build()

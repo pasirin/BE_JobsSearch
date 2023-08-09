@@ -63,12 +63,21 @@ public class UserService {
     return ResponseObject.ok();
   }
 
-  public ResponseObject setStatus(Long id, EStatus status) {
+  public ResponseObject setStatus(Long id, String status) {
     if (userRepository.findById(id).isEmpty()) {
       return ResponseObject.message("There Aren't any user with the requested Id");
     }
     User user = userRepository.findById(id).get();
-    user.setStatus(status);
+    switch (status){
+      case "active":
+        user.setStatus(EStatus.ACTIVE);
+        break;
+      case "disable":
+        user.setStatus(EStatus.DISABLE);
+        break;
+      default:
+        return ResponseObject.message("There aren't any account status that matches your request");
+    }
     userRepository.save(user);
     return ResponseObject.ok();
   }
