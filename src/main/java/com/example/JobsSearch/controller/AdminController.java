@@ -8,12 +8,12 @@ import com.example.JobsSearch.service.impl.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/admin")
 @PreAuthorize("hasRole('ADMIN')")
@@ -125,7 +125,7 @@ public class AdminController {
   }
 
   @PostMapping("/users/{id}/status")
-  public ResponseEntity<?> changeUserStatus(@PathVariable Long id, @Valid EStatus eStatus) {
+  public ResponseEntity<?> changeUserStatus(@PathVariable Long id, @RequestBody EStatus eStatus) {
     ResponseObject output = userService.setStatus(id, eStatus);
     return output.getStatus()
         ? ResponseEntity.ok().build()
@@ -135,7 +135,8 @@ public class AdminController {
   // News Section
   @PostMapping("/news/add")
   public ResponseEntity<?> createNews(@Valid @RequestBody NewsRequest newsRequest) {
-    return ResponseEntity.ok().body(newsService.create(newsRequest));
+    newsService.create(newsRequest);
+    return ResponseEntity.ok().build();
   }
 
   @GetMapping("/news/{id}")

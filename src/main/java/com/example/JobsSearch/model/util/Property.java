@@ -15,16 +15,16 @@ public class Property {
     private Long id;
     private String body;
     private String title;
-    private Integer sort_order;
+    private Integer sortOrder;
     private Boolean is_displayed;
 
     public Property() {
     }
 
-    public Property(String body, String title, Integer sort_order, Boolean is_displayed) {
+    public Property(String body, String title, Integer sortOrder, Boolean is_displayed) {
         this.body = body;
         this.title = title;
-        this.sort_order = sort_order;
+        this.sortOrder = sortOrder;
         this.is_displayed = is_displayed;
     }
 
@@ -44,12 +44,12 @@ public class Property {
         this.title = title;
     }
 
-    public Integer getSort_order() {
-        return sort_order;
+    public Integer getSortOrder() {
+        return sortOrder;
     }
 
-    public void setSort_order(Integer sort_order) {
-        this.sort_order = sort_order;
+    public void setSortOrder(Integer sortOrder) {
+        this.sortOrder = sortOrder;
     }
 
     public Boolean getIs_displayed() {

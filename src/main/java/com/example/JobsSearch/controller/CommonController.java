@@ -1,6 +1,5 @@
 package com.example.JobsSearch.controller;
 
-import com.example.JobsSearch.model.Job;
 import com.example.JobsSearch.service.impl.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,11 +11,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 public class CommonController {
     private static final Logger logger = LoggerFactory.getLogger(CommonController.class);

@@ -62,7 +62,7 @@ public class Job {
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "job_id")
   @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-  private List<WorkingHour> working_hour;
+  private List<WorkingHour> workingHours;
 
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinColumn(name = "job_id")
@@ -139,7 +139,7 @@ public class Job {
     this.jobTitleCatchPhrase = jobTitleCatchPhrase;
     this.location = location;
     this.salary = salary;
-    this.working_hour = workingHours;
+    this.workingHours = workingHours;
     this.searchLabels = searchLabels;
     this.postScripts = postScripts;
     this.catchText = catchText;
@@ -180,7 +180,7 @@ public class Job {
     this.jobTitleCatchPhrase = jobTitleCatchPhrase;
     this.location = location;
     this.salary = salary;
-    this.working_hour = workingHours;
+    this.workingHours = workingHours;
     this.searchLabels = searchLabels;
     this.webApplication = webApplication;
     this.postScripts = postScripts;

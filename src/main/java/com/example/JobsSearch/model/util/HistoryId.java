@@ -2,7 +2,6 @@ package com.example.JobsSearch.model.util;
 
 import com.example.JobsSearch.model.Job;
 import com.example.JobsSearch.model.Seeker;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Embeddable;
@@ -37,5 +36,23 @@ public class HistoryId implements Serializable {
 
     public void setJob(Job job) {
         this.job = job;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        HistoryId historyId = (HistoryId) o;
+
+        if (!seeker.equals(historyId.seeker)) return false;
+        return job.equals(historyId.job);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = seeker.hashCode();
+        result = 31 * result + job.hashCode();
+        return result;
     }
 }

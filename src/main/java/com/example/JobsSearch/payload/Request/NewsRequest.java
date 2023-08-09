@@ -4,12 +4,12 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 public class NewsRequest {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @NotBlank
     private LocalDateTime opensAt;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -22,7 +22,7 @@ public class NewsRequest {
     @NotBlank
     private String subTitle;
 
-    @NotBlank
+    @NotNull
     private Integer category;
 
     @NotBlank
@@ -33,12 +33,10 @@ public class NewsRequest {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @NotBlank
     private LocalDateTime eventStartAt;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @NotBlank
     private LocalDateTime eventEndAt;
 
     public LocalDateTime getOpensAt() {

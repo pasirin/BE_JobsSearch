@@ -14,14 +14,14 @@ public class PostScript {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String body;
-    private Integer sort_order;
+    private Integer sortOrder;
 
     public PostScript() {
     }
 
-    public PostScript(String body, Integer sort_order) {
+    public PostScript(String body, Integer sortOrder) {
         this.body = body;
-        this.sort_order = sort_order;
+        this.sortOrder = sortOrder;
     }
 
     public String getBody() {
@@ -32,11 +32,11 @@ public class PostScript {
         this.body = body;
     }
 
-    public Integer getSort_order() {
-        return sort_order;
+    public Integer getSortOrder() {
+        return sortOrder;
     }
 
-    public void setSort_order(Integer sort_order) {
-        this.sort_order = sort_order;
+    public void setSortOrder(Integer sortOrder) {
+        this.sortOrder = sortOrder;
     }
 }
