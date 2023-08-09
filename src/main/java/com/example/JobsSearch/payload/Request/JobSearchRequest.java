@@ -17,5 +17,5 @@ public class JobSearchRequest {
     private String location2;
     private String location3;
     private List<Long> tagId;
-    private Boolean onlyMeta;
+    private Boolean only_meta;
 }

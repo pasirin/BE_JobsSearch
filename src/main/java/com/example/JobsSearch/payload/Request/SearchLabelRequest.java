@@ -9,5 +9,5 @@ public class SearchLabelRequest {
     @NotBlank
     private String name;
 
-    private Boolean isEnable;
+    private Boolean is_enable;
 }

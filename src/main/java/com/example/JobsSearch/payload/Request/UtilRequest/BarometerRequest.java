@@ -9,5 +9,4 @@ public class BarometerRequest {
     private List<String> contents;
     private List<Integer> stats;
     private boolean isDisplayed;
-
 }

@@ -4,6 +4,7 @@ import com.example.JobsSearch.model.util.OrganizationType;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 public class HrSignupRequest {
     @NotBlank
@@ -19,7 +20,7 @@ public class HrSignupRequest {
     private String email;
 
     @NotBlank
-    private String phoneNumber;
+    private String phone_number;
 
     private String website;
 
@@ -30,12 +31,12 @@ public class HrSignupRequest {
 
     private OrganizationType organizationType;
 
-    public HrSignupRequest(String username, String password, String name, String email, String phoneNumber, String website, String address, String introduction, OrganizationType organizationType) {
+    public HrSignupRequest(String username, String password, String name, String email, String phone_number, String website, String address, String introduction, OrganizationType organizationType) {
         this.username = username;
         this.password = password;
         this.name = name;
         this.email = email;
-        this.phoneNumber = phoneNumber;
+        this.phone_number = phone_number;
         this.website = website;
         this.address = address;
         this.introduction = introduction;
@@ -77,12 +78,12 @@ public class HrSignupRequest {
         this.email = email;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public String getPhone_number() {
+        return phone_number;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setPhone_number(String phone_number) {
+        this.phone_number = phone_number;
     }
 
     public String getWebsite() {

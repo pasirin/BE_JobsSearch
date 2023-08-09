@@ -24,12 +24,12 @@ public class WorkingHour {
 
     private LocalTime end;
 
-    private Boolean isFullTime = false;
+    private Boolean is_full_time = false;
 
-    public WorkingHour(Integer hours, LocalTime start, LocalTime end, Boolean isFullTime) {
+    public WorkingHour(Integer hours, LocalTime start, LocalTime end, Boolean is_full_time) {
         this.hours = hours;
         this.start = start;
         this.end = end;
-        this.isFullTime = isFullTime;
+        this.is_full_time = is_full_time;
     }
 }

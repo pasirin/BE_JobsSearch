@@ -6,6 +6,6 @@ import lombok.Data;
 public class PropertyRequest {
     private String body;
     private String title;
-    private Integer sortOrder;
-    private Boolean isDisplayed;
+    private Integer sort_order;
+    private Boolean is_displayed;
 }

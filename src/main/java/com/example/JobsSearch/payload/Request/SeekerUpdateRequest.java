@@ -6,7 +6,7 @@ import java.sql.Date;
 
 public class SeekerUpdateRequest {
   @Getter @Setter private String name;
-  @Getter @Setter private String phoneNumber;
+  @Getter @Setter private String phone_number;
   @Getter @Setter private Date dob;
   @Getter @Setter private String address;
   @Getter @Setter private String website;

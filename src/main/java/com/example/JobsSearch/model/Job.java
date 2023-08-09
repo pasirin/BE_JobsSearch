@@ -19,6 +19,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @Entity
+@Table(name = "jobs")
 @EntityListeners(AuditingEntityListener.class)
 public class Job {
   @Id
@@ -198,5 +199,4 @@ public class Job {
   public Long getHRId() {
     return this.organization.getId();
   }
-
 }

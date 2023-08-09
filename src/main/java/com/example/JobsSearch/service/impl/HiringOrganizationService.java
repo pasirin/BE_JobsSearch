@@ -75,7 +75,7 @@ public class HiringOrganizationService implements IHiringOrganizationService {
     }
 
     hiringOrganization.setName(hrUpdateProfileRequest.getName());
-    hiringOrganization.setPhoneNumber(hrUpdateProfileRequest.getPhoneNumber());
+    hiringOrganization.setPhoneNumber(hrUpdateProfileRequest.getPhone_number());
     hiringOrganization.setWebsite(hrUpdateProfileRequest.getWebsite());
     hiringOrganization.setAddress(hrUpdateProfileRequest.getAddress());
     hiringOrganization.setIntroduction(hrUpdateProfileRequest.getIntroduction());

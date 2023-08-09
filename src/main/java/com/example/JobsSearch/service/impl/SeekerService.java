@@ -65,7 +65,7 @@ public class SeekerService {
     }
     Seeker seeker = seekerRepository.findByUserId(id).get();
     seeker.setName(seekerUpdateRequest.getName());
-    seeker.setPhoneNumber(seekerUpdateRequest.getPhoneNumber());
+    seeker.setPhoneNumber(seekerUpdateRequest.getPhone_number());
     seeker.setDob(seekerUpdateRequest.getDob());
     seeker.setAddress(seekerUpdateRequest.getAddress());
     seeker.setWebsite(seekerUpdateRequest.getWebsite());
@@ -73,7 +73,7 @@ public class SeekerService {
     seeker.setExperience(seekerUpdateRequest.getExperience());
     seeker.setSkills(seekerUpdateRequest.getSkills());
     seeker.setAchievements(seekerUpdateRequest.getAchievements());
-    seeker.setOtherDetails(seekerUpdateRequest.getOther_details());
+    seeker.setOther_details(seekerUpdateRequest.getOther_details());
     if (!seeker.getPhoto().isEmpty()) {
       try {
         String result = imageUploadService.deleteImage(seeker.getPhoto());

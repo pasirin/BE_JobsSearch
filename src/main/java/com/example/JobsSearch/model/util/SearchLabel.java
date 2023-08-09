@@ -15,7 +15,7 @@ public class SearchLabel {
   private Long id;
 
   private String name;
-  private Boolean isEnabled;
+  private Boolean is_enabled;
 
   public SearchLabel() {}
 
@@ -23,9 +23,9 @@ public class SearchLabel {
     return id;
   }
 
-  public SearchLabel(String name, Boolean isEnabled) {
+  public SearchLabel(String name, Boolean is_enabled) {
     this.name = name;
-    this.isEnabled = isEnabled;
+    this.is_enabled = is_enabled;
   }
 
   public String getName() {
@@ -36,11 +36,11 @@ public class SearchLabel {
     this.name = name;
   }
 
-  public Boolean getIsEnabled() {
-    return isEnabled;
+  public Boolean getIs_enabled() {
+    return is_enabled;
   }
 
-  public void setIsEnabled(Boolean isEnabled) {
-    this.isEnabled = isEnabled;
+  public void setIs_enabled(Boolean is_enabled) {
+    this.is_enabled = is_enabled;
   }
 }

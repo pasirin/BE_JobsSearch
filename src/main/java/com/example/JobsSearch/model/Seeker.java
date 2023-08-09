@@ -9,6 +9,7 @@ import java.util.Set;
 
 @Data
 @Entity
+@Table(name = "seekers")
 public class Seeker {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,7 +41,7 @@ public class Seeker {
 
     private String achievements;
 
-    private String otherDetails;
+    private String other_details;
 
     @OneToMany(mappedBy = "primaryKey.seeker", cascade = CascadeType.ALL)
     private Set<History> histories = new HashSet<>();
@@ -62,7 +63,7 @@ public class Seeker {
         this.experience = experience;
         this.skills = skills;
         this.achievements = achievements;
-        this.otherDetails = other_details;
+        this.other_details = other_details;
     }
     @Transient
     public String getEmail() {
