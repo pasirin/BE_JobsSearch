@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 public class NewsRequest {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @NotBlank
     private LocalDateTime opensAt;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
