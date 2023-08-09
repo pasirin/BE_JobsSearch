@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 public class NewsRequest {
@@ -21,7 +22,7 @@ public class NewsRequest {
     @NotBlank
     private String subTitle;
 
-    @NotBlank
+    @NotNull
     private Integer category;
 
     @NotBlank
