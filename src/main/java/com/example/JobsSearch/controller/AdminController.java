@@ -135,7 +135,8 @@ public class AdminController {
   // News Section
   @PostMapping("/news/add")
   public ResponseEntity<?> createNews(@Valid @RequestBody NewsRequest newsRequest) {
-    return ResponseEntity.ok().body(newsService.create(newsRequest));
+    newsService.create(newsRequest);
+    return ResponseEntity.ok().build();
   }
 
   @GetMapping("/news/{id}")
