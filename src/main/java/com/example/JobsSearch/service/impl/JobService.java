@@ -175,9 +175,6 @@ public class JobService {
 
     /**
      * Định nghĩa hàm tương tác với job
-     *
-     * @param jobId
-     * @param interactionType
      */
     public ResponseObject interactWithJob(Long userId, Long jobId, InteractionType interactionType) {
         if (seekerRepository.findByUserId(userId).isEmpty()) {
@@ -230,7 +227,7 @@ public class JobService {
         }
 
         // Sub-Image handling
-        if (request.getSubImageUrl() != null && request.getSubImageUrl().size() > 0) {
+        if (request.getSubImageUrl() != null && !request.getSubImageUrl().isEmpty()) {
             IntStream.range(0, request.getSubImageUrl().size())
                     .forEach(
                             index -> {
@@ -251,7 +248,7 @@ public class JobService {
         }
 
         // Handle Photo Gallery
-        if (request.getGalleryUrl() != null && request.getGalleryUrl().size() > 0) {
+        if (request.getGalleryUrl() != null && !request.getGalleryUrl().isEmpty()) {
             IntStream.range(0, request.getGalleryUrl().size())
                     .forEach(
                             index -> {
@@ -542,7 +539,7 @@ public class JobService {
 
         // Sub Images
         List<Image> newSubImageList = new ArrayList<>();
-        if (jobRequest.getSubImageUrl() != null && jobRequest.getSubImageUrl().size() > 0) {
+        if (jobRequest.getSubImageUrl() != null && !jobRequest.getSubImageUrl().isEmpty()) {
             IntStream.range(0, jobRequest.getSubImageUrl().size())
                     .forEach(
                             index -> {
@@ -601,7 +598,7 @@ public class JobService {
 
         // Gallery
         List<Image> newGalleryList = new ArrayList<>();
-        if (jobRequest.getGalleryUrl() != null && jobRequest.getGalleryUrl().size() > 0) {
+        if (jobRequest.getGalleryUrl() != null && !jobRequest.getGalleryUrl().isEmpty()) {
             IntStream.range(0, jobRequest.getGalleryUrl().size())
                     .forEach(
                             index -> {

@@ -8,5 +8,4 @@ import java.util.List;
 
 public interface JobRepository extends JpaRepository<Job, Long>, JpaSpecificationExecutor<Job> {
     List<Job> findByOrganizationId(Long organizationId);
-    Boolean existsByOrganizationId(Long organizationId);
 }

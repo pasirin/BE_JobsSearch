@@ -65,11 +65,15 @@ public class AuthService {
     @Value("${app.admin.password}")
     private String adminPassword;
 
+    @Value("${app.admin.email}")
+    private String adminEmail;
+
     @EventListener
     public void initAdmin(ApplicationReadyEvent event) {
         if (!userRepository.existsByUsername(adminUsername)) {
             User user = new User(adminUsername, passwordEncoder.encode(adminPassword), ERole.ROLE_ADMIN);
             user.setStatus(EStatus.ACTIVE);
+            user.setEmail(adminEmail);
             userRepository.save(user);
         }
     }
@@ -131,7 +135,7 @@ public class AuthService {
         if (isPasswordValid(hrSignupRequest.getPassword())) {
             return ResponseObject.message("Mật khẩu phải tuân thủ nguyên tắc có ít nhất 8 ký tự, chứa ít nhất 1 ký tự viết hoa, 1 ký tự số, 1 ký tự đặc biệt");
         }
-        if (userRepository.findByEmail(hrSignupRequest.getEmail()).isPresent()) {
+        if (userRepository.existsByEmail(hrSignupRequest.getEmail())) {
             return ResponseObject.message("Email đã tồn tại trong cơ sở dữ liệu.");
         }
         User user = new User();
@@ -144,12 +148,16 @@ public class AuthService {
 
         HiringOrganization hiringOrganization = new HiringOrganization();
         String value = hrSignupRequest.getOrganizationType().getValue();
-        if(value.equals("B")) {
-            hiringOrganization.setOrganizationType(OrganizationType.B);
-        } else if(value.equals("C")) {
-            hiringOrganization.setOrganizationType(OrganizationType.C);
-        } else if(value.equals("E")) {
-            hiringOrganization.setOrganizationType(OrganizationType.E);
+        switch (value) {
+            case "B":
+                hiringOrganization.setOrganizationType(OrganizationType.B);
+                break;
+            case "C":
+                hiringOrganization.setOrganizationType(OrganizationType.C);
+                break;
+            case "E":
+                hiringOrganization.setOrganizationType(OrganizationType.E);
+                break;
         }
         hiringOrganization.setUser(user);
         hiringOrganization.setName(hrSignupRequest.getName());
@@ -178,6 +186,9 @@ public class AuthService {
     public ResponseObject changeEmail(Long id, String Email) {
         if (userRepository.findById(id).isEmpty()) {
             return ResponseObject.message("There Aren't any user with the requested Id");
+        }
+        if (userRepository.existsByEmail(Email)) {
+            return ResponseObject.message("There already an account with that email");
         }
         User user = userRepository.findById(id).get();
         user.setEmail(Email);

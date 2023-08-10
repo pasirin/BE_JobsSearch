@@ -11,9 +11,9 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
   // Các phương thức truy vấn tương ứng với thao tác trên bảng User
 
-  List<User> findByUsernameLike(String name);
-
   Optional<User> findByEmail(String email);
+
+  Boolean existsByEmail(String email);
 
   Optional<User> findByResetPasswordToken(String token);
 

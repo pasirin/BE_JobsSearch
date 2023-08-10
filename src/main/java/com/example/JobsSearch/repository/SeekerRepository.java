@@ -11,8 +11,6 @@ public interface SeekerRepository extends JpaRepository<Seeker, Long> {
 
   Optional<Seeker> findByUserId(Long id);
 
-  List<Seeker> findByNameLike(String name);
-
   Collection<Seeker> findByUserEmailLikeAndNameLikeAndPhoneNumberLike(
       String email, String name, String phoneNumber);
 }

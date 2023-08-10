@@ -1,12 +1,14 @@
 package com.example.JobsSearch.payload.Request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
+@Data
 public class NewsRequest {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -37,76 +39,4 @@ public class NewsRequest {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime eventEndAt;
-
-    public LocalDateTime getOpensAt() {
-        return opensAt;
-    }
-
-    public void setOpensAt(LocalDateTime opensAt) {
-        this.opensAt = opensAt;
-    }
-
-    public LocalDateTime getExpiresAt() {
-        return expiresAt;
-    }
-
-    public void setExpiresAt(LocalDateTime expiresAt) {
-        this.expiresAt = expiresAt;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getSubTitle() {
-        return subTitle;
-    }
-
-    public void setSubTitle(String subTitle) {
-        this.subTitle = subTitle;
-    }
-
-    public Integer getCategory() {
-        return category;
-    }
-
-    public void setCategory(Integer category) {
-        this.category = category;
-    }
-
-    public String getBody() {
-        return body;
-    }
-
-    public void setBody(String body) {
-        this.body = body;
-    }
-
-    public String getEventPageUrl() {
-        return eventPageUrl;
-    }
-
-    public void setEventPageUrl(String eventPageUrl) {
-        this.eventPageUrl = eventPageUrl;
-    }
-
-    public LocalDateTime getEventStartAt() {
-        return eventStartAt;
-    }
-
-    public void setEventStartAt(LocalDateTime eventStartAt) {
-        this.eventStartAt = eventStartAt;
-    }
-
-    public LocalDateTime getEventEndAt() {
-        return eventEndAt;
-    }
-
-    public void setEventEndAt(LocalDateTime eventEndAt) {
-        this.eventEndAt = eventEndAt;
-    }
 }

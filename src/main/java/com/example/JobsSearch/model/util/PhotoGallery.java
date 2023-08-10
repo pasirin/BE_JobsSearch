@@ -26,18 +26,5 @@ public class PhotoGallery {
 
     public PhotoGallery() {
     }
-
-    public Long getId() {
-        return id;
-    }
-
-
-    public List<Image> getContents() {
-        return contents;
-    }
-
-    public void setContents(List<Image> contents) {
-        this.contents = contents;
-    }
 }
 

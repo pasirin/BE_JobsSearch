@@ -42,13 +42,9 @@ public class User {
     // Support better search result
     private String email = "";
 
-    @Setter
-    @Getter
     @JsonIgnore
     private String resetPasswordToken;
 
-    @Getter
-    @Setter
     @Enumerated(EnumType.STRING)
     private EStatus status;
 

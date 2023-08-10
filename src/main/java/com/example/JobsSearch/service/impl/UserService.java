@@ -26,10 +26,6 @@ public class UserService {
     return userRepository.findAll();
   }
 
-  public List<User> getByName(String name) {
-    return userRepository.findByUsernameLike("%" + name + "%");
-  }
-
   public Collection<User> searchQuery(String email, String username, EStatus status) {
     return userRepository.findByEmailLikeAndUsernameLikeAndStatus(
         "%" + (email == null ? "" : email) + "%",

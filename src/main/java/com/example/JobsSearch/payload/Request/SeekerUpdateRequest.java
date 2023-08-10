@@ -1,19 +1,21 @@
 package com.example.JobsSearch.payload.Request;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import java.sql.Date;
 
+@Data
 public class SeekerUpdateRequest {
-  @Getter @Setter private String name;
-  @Getter @Setter private String phone_number;
-  @Getter @Setter private Date dob;
-  @Getter @Setter private String address;
-  @Getter @Setter private String website;
-  @Getter @Setter private String education;
-  @Getter @Setter private String experience;
-  @Getter @Setter private String skills;
-  @Getter @Setter private String achievements;
-  @Getter @Setter private String other_details;
-  @Getter @Setter private String profileImageUrl;
+  private String name;
+  private String phone_number;
+  private Date dob;
+  private String address;
+  private String website;
+  private String education;
+  private String experience;
+  private String skills;
+  private String achievements;
+  private String other_details;
+  private String profileImageUrl;
 }
