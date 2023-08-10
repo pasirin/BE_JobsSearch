@@ -16,8 +16,6 @@ import java.util.List;
 
 @Service
 public class HiringOrganizationService implements IHiringOrganizationService {
-
-  @Autowired UserRepository userRepository;
   @Autowired HiringOrganizationRepository hiringOrganizationRepository;
 
   @Override

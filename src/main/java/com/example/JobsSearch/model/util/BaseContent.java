@@ -1,9 +1,12 @@
 package com.example.JobsSearch.model.util;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.util.List;
 
 @MappedSuperclass
+@Data
 public abstract class BaseContent {
 
     @ElementCollection
@@ -17,21 +20,5 @@ public abstract class BaseContent {
     public BaseContent(List<String> contents, boolean isDisplayed) {
         this.contents = contents;
         this.isDisplayed = isDisplayed;
-    }
-
-    public List<String> getContents() {
-        return contents;
-    }
-
-    public void setContents(List<String> contents) {
-        this.contents = contents;
-    }
-
-    public boolean isDisplayed() {
-        return isDisplayed;
-    }
-
-    public void setDisplayed(boolean displayed) {
-        isDisplayed = displayed;
     }
 }

@@ -39,18 +39,6 @@ public class History {
         this.interactionType = interactionType;
     }
 
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public HistoryId getPrimaryKey() {
-        return primaryKey;
-    }
-
     @Transient
     public Seeker getSeeker() {
         return getPrimaryKey().getSeeker();
@@ -60,17 +48,4 @@ public class History {
     public Job getJob() {
         return getPrimaryKey().getJob();
     }
-
-    public void setPrimaryKey(HistoryId primaryKey) {
-        this.primaryKey = primaryKey;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
 }

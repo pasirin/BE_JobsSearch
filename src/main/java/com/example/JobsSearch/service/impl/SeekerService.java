@@ -18,8 +18,6 @@ public class SeekerService {
   private static final Logger logger = LoggerFactory.getLogger(SeekerService.class);
 
   @Autowired SeekerRepository seekerRepository;
-
-  @Autowired UserRepository userRepository;
   @Autowired ImageUploadService imageUploadService;
 
   public ResponseObject getProfile(Long id) {
@@ -38,10 +36,6 @@ public class SeekerService {
 
   public Collection<Seeker> getAllSeekers() {
     return seekerRepository.findAll();
-  }
-
-  public Collection<Seeker> getByName(String name) {
-    return seekerRepository.findByNameLike("%" + name + "%");
   }
 
   public Collection<Seeker> searchQuery(String email, String name, String phoneNumber) {

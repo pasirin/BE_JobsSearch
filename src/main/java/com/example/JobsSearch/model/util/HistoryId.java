@@ -2,6 +2,7 @@ package com.example.JobsSearch.model.util;
 
 import com.example.JobsSearch.model.Job;
 import com.example.JobsSearch.model.Seeker;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Embeddable;
@@ -10,6 +11,7 @@ import java.io.Serializable;
 
 @NoArgsConstructor
 @Embeddable
+@Data
 public class HistoryId implements Serializable {
     @ManyToOne
     private Seeker seeker;
@@ -19,22 +21,6 @@ public class HistoryId implements Serializable {
 
     public HistoryId(Seeker seeker, Job job) {
         this.seeker = seeker;
-        this.job = job;
-    }
-
-    public Seeker getSeeker() {
-        return seeker;
-    }
-
-    public void setSeeker(Seeker seeker) {
-        this.seeker = seeker;
-    }
-
-    public Job getJob() {
-        return job;
-    }
-
-    public void setJob(Job job) {
         this.job = job;
     }
 

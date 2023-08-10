@@ -25,20 +25,4 @@ public class Interview extends BaseContent {
     public Interview(List<String> contents, boolean isDisplayed) {
         super(contents, isDisplayed);
     }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Job getJob() {
-        return job;
-    }
-
-    public void setJob(Job job) {
-        this.job = job;
-    }
 }

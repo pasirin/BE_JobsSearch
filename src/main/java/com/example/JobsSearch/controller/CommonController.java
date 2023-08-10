@@ -80,6 +80,4 @@ public class CommonController {
                 });
         return ResponseEntity.ok().body(urls);
     }
-
-
 }

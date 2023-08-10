@@ -107,7 +107,5 @@ public class HiringOrganizationController {
                 ? ResponseEntity.ok().build()
                 : ResponseEntity.badRequest().body(output.getMessage());
     }
-
-
 }
 
