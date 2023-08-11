@@ -40,6 +40,19 @@ public class UserService {
     return ResponseObject.ok().setData(userRepository.findById(id).get());
   }
 
+  public ResponseObject getByUserId(Long id) {
+    if (!userRepository.existsById(id)) {
+      return ResponseObject.message("There Aren't any user with the requested username");
+    }
+    if (seekerRepository.findByUserId(id).isPresent()) {
+      return ResponseObject.ok().setData(seekerRepository.findByUserId(id));
+    } else if (hiringOrganizationRepository.findByUserId(id).isPresent()) {
+      return ResponseObject.ok().setData(hiringOrganizationRepository.findByUserId(id));
+    } else {
+      return ResponseObject.ok().setData(userRepository.findById(id));
+    }
+  }
+
   public ResponseObject delete(Long id) {
     if (userRepository.findById(id).isEmpty()) {
       return ResponseObject.message("There Aren't any user with the requested Id");
@@ -64,7 +77,7 @@ public class UserService {
       return ResponseObject.message("There Aren't any user with the requested Id");
     }
     User user = userRepository.findById(id).get();
-    switch (status){
+    switch (status) {
       case "active":
         user.setStatus(EStatus.ACTIVE);
         break;
