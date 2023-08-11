@@ -442,15 +442,11 @@ public class JobService {
         job.setExpiresAt(jobRequest.getExpiresAt());
 
         // Main image
-        Image image = job.getMainImage();
         Image newMainImage = new Image();
-        if (jobRequest.getMainImageUrl() == null
-                || !image.getUrl().equals(jobRequest.getMainImageUrl())) {
-            newMainImage.setUrl(jobRequest.getMainImageUrl());
-        }
-        if (jobRequest.getMainImageDescription() != null) {
-            newMainImage.setDescription(jobRequest.getMainImageDescription());
-        }
+
+        newMainImage.setUrl(jobRequest.getMainImageUrl());
+        newMainImage.setDescription(jobRequest.getMainImageDescription());
+
         job.setMainImage(newMainImage);
 
         job.setTitle(jobRequest.getTitle());
