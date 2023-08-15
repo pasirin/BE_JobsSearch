@@ -3,6 +3,7 @@ package com.example.JobsSearch.controller;
 import com.example.JobsSearch.payload.Request.HrSignupRequest;
 import com.example.JobsSearch.payload.Request.LoginRequest;
 import com.example.JobsSearch.payload.Request.SeekerSignupRequest;
+import com.example.JobsSearch.payload.Request.UtilRequest.ChangePasswordRequest;
 import com.example.JobsSearch.payload.Response.ResponseObject;
 import com.example.JobsSearch.security.UserDetailsImpl;
 import com.example.JobsSearch.service.impl.AuthService;
@@ -57,11 +58,11 @@ public class AuthController {
   }
 
   @PostMapping("/change-password")
-  public ResponseEntity<?> changePassword(@Valid @RequestBody String password) {
+  public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
     UserDetailsImpl object =
         (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     ResponseObject output =
-        authService.changePassword(object.getId(), object.getUsername(), password);
+        authService.changePassword(object.getId(), object.getUsername(), changePasswordRequest);
     return output.getStatus()
         ? ResponseEntity.ok().build()
         : ResponseEntity.badRequest().body(output.getMessage());

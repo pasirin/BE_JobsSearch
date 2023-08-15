@@ -18,7 +18,7 @@ public class WorkingHour {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Integer countHours;
+    private Double countHours;
 
     private LocalTime startTime;
 
@@ -26,7 +26,7 @@ public class WorkingHour {
 
     private Boolean isFullTime = false;
 
-    public WorkingHour(Integer countHours, LocalTime startTime, LocalTime endTime, Boolean isFullTime) {
+    public WorkingHour(Double countHours, LocalTime startTime, LocalTime endTime, Boolean isFullTime) {
         this.countHours = countHours;
         this.startTime = startTime;
         this.endTime = endTime;

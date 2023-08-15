@@ -68,7 +68,7 @@ public class SeekerService {
     seeker.setSkills(seekerUpdateRequest.getSkills());
     seeker.setAchievements(seekerUpdateRequest.getAchievements());
     seeker.setOther_details(seekerUpdateRequest.getOther_details());
-    if (!seeker.getPhoto().isEmpty()) {
+    if (seeker.getPhoto() != null && !seeker.getPhoto().isEmpty()) {
       try {
         imageUploadService.deleteImage(seeker.getPhoto());
       } catch (IOException e) {

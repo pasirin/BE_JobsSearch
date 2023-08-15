@@ -8,8 +8,7 @@ import com.example.JobsSearch.service.ServiceCRUD;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class NewsService implements ServiceCRUD<NewsRequest, News> {
@@ -62,7 +61,9 @@ public class NewsService implements ServiceCRUD<NewsRequest, News> {
 
   @Override
   public Collection<News> getAll() {
-    return newsRepository.findByOrderByUpdatedAtDesc();
+    List<News> newsCollection = newsRepository.findByOrderByUpdatedAtDesc();
+    newsCollection.sort(Comparator.comparing(News::getUpdatedAt));
+    return newsCollection;
   }
 
   @Override
