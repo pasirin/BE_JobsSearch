@@ -9,6 +9,7 @@ D:\WorkSpace\InternProject\BE_JobsSearch\src\main\java\com\example\JobsSearch\pa
 D:\WorkSpace\InternProject\BE_JobsSearch\src\main\java\com\example\JobsSearch\repository\util\LocationRepository.java
 D:\WorkSpace\InternProject\BE_JobsSearch\src\main\java\com\example\JobsSearch\model\util\HistoryId.java
 D:\WorkSpace\InternProject\BE_JobsSearch\src\main\java\com\example\JobsSearch\payload\Request\UtilRequest\BarometerRequest.java
+D:\WorkSpace\InternProject\BE_JobsSearch\src\main\java\com\example\JobsSearch\payload\Request\UtilRequest\ChangePasswordRequest.java
 D:\WorkSpace\InternProject\BE_JobsSearch\src\main\java\com\example\JobsSearch\security\UserDetailsImpl.java
 D:\WorkSpace\InternProject\BE_JobsSearch\src\main\java\com\example\JobsSearch\config\SwaggerConfig.java
 D:\WorkSpace\InternProject\BE_JobsSearch\src\main\java\com\example\JobsSearch\model\Job.java

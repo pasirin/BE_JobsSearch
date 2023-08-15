@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.example.JobsSearch.JobsSearchApplicationTests
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 35.068 s - in com.example.JobsSearch.JobsSearchApplicationTests
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 23.619 s - in com.example.JobsSearch.JobsSearchApplicationTests
