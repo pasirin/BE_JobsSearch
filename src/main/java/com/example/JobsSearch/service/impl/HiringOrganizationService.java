@@ -12,7 +12,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class HiringOrganizationService implements IHiringOrganizationService {
@@ -20,7 +22,9 @@ public class HiringOrganizationService implements IHiringOrganizationService {
 
   @Override
   public Collection<HiringOrganization> getAll() {
-    return hiringOrganizationRepository.findAll();
+    return hiringOrganizationRepository.findAll().stream()
+        .sorted(Comparator.comparing(HiringOrganization::getId))
+        .collect(Collectors.toList());
   }
 
   @Override

@@ -1,5 +1,6 @@
 package com.example.JobsSearch.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -44,6 +45,7 @@ public class Seeker {
     private String other_details;
 
     @OneToMany(mappedBy = "primaryKey.seeker", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<History> histories = new HashSet<>();
 
     public Seeker() {

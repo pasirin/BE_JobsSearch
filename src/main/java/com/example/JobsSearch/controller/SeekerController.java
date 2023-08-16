@@ -66,4 +66,13 @@ public class SeekerController {
         ? ResponseEntity.ok().build()
         : ResponseEntity.badRequest().body(output.getMessage());
   }
+
+  @GetMapping("/history")
+  public ResponseEntity<?> getHistory() {
+    UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    ResponseObject output = seekerService.getSeekerHistory(userDetails.getId());
+    return output.getStatus()
+            ? ResponseEntity.ok().body(output.getData())
+            : ResponseEntity.badRequest().body(output.getMessage());
+  }
 }
