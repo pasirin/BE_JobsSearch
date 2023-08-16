@@ -1,8 +1,10 @@
 package com.example.JobsSearch.service.impl;
 
+import com.example.JobsSearch.model.History;
 import com.example.JobsSearch.model.Seeker;
 import com.example.JobsSearch.payload.Request.SeekerUpdateRequest;
 import com.example.JobsSearch.payload.Response.ResponseObject;
+import com.example.JobsSearch.repository.HistoryRepository;
 import com.example.JobsSearch.repository.SeekerRepository;
 import com.example.JobsSearch.repository.UserRepository;
 import org.slf4j.Logger;
@@ -11,7 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.Collection;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class SeekerService {
@@ -19,6 +22,8 @@ public class SeekerService {
 
   @Autowired SeekerRepository seekerRepository;
   @Autowired ImageUploadService imageUploadService;
+
+  @Autowired HistoryRepository historyRepository;
 
   public ResponseObject getProfile(Long id) {
     if (seekerRepository.findByUserId(id).isEmpty()) {
@@ -35,7 +40,9 @@ public class SeekerService {
   }
 
   public Collection<Seeker> getAllSeekers() {
-    return seekerRepository.findAll();
+    return seekerRepository.findAll().stream()
+        .sorted(Comparator.comparing(Seeker::getId))
+        .collect(Collectors.toList());
   }
 
   public Collection<Seeker> searchQuery(String email, String name, String phoneNumber) {
@@ -78,5 +85,15 @@ public class SeekerService {
     seeker.setPhoto(seekerUpdateRequest.getProfileImageUrl());
     seekerRepository.save(seeker);
     return ResponseObject.ok();
+  }
+
+  public ResponseObject getSeekerHistory(Long id) {
+    if (seekerRepository.findByUserId(id).isEmpty()) {
+      return ResponseObject.message("There Aren't any Seeker with the provided Id");
+    }
+    Seeker seeker = seekerRepository.findByUserId(id).get();
+    List<History> history = historyRepository.findByPrimaryKeySeekerId(seeker.getId());
+    history.sort(Comparator.comparing(History::getUpdatedAt));
+    return ResponseObject.ok().setData(history);
   }
 }

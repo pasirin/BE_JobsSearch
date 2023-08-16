@@ -124,7 +124,7 @@ public class JobService {
                 job ->
                     seeker.getHistories().stream()
                         .noneMatch(history -> history.getJob().getId().equals(job.getId())))
-            .collect(Collectors.toList());
+                .distinct().collect(Collectors.toList());
     if (jobSearchRequest.getOnly_meta() != null && jobSearchRequest.getOnly_meta()) {
       return ResponseObject.ok().setData(filteredJobs.size());
     }
@@ -144,12 +144,12 @@ public class JobService {
 
   private Specification<Job> hasStartTime(LocalTime startTime) {
     return (root, query, criteriaBuilder) ->
-        criteriaBuilder.equal(root.join("workingHours").get("startTime"), startTime);
+        criteriaBuilder.greaterThanOrEqualTo(root.join("workingHours").get("startTime"), startTime);
   }
 
   private Specification<Job> hasEndTime(LocalTime endTime) {
     return (root, query, criteriaBuilder) ->
-        criteriaBuilder.equal(root.join("workingHours").get("endTime"), endTime);
+        criteriaBuilder.lessThanOrEqualTo(root.join("workingHours").get("endTime"), endTime);
   }
 
   private Specification<Job> hasSearchTag(List<Long> tagId) {

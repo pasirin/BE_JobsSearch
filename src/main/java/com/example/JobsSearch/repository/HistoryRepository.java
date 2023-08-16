@@ -11,4 +11,6 @@ public interface HistoryRepository extends JpaRepository<History, Long> {
     Optional<History> findByPrimaryKeySeekerIdAndPrimaryKeyJobId(Long seekerId, Long jobId);
     // Lấy danh sách các History có interactionType là LIKE dựa trên jobId
     List<History> findByPrimaryKeyJobIdAndInteractionType(Long jobId, InteractionType interactionType);
+
+    List<History> findByPrimaryKeySeekerId(Long id);
 }

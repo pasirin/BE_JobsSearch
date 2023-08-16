@@ -111,7 +111,23 @@ public class Job {
   private String productCode;
 
   @OneToMany(mappedBy = "primaryKey.job", cascade = CascadeType.ALL)
+  @JsonIgnore
   private Set<History> histories = new HashSet<>();
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    Job job = (Job) o;
+
+      return id.equals(job.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return id.hashCode();
+  }
 
   public Job(
       HiringOrganization organization,

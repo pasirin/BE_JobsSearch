@@ -34,11 +34,4 @@ public class HistoryId implements Serializable {
         if (!seeker.equals(historyId.seeker)) return false;
         return job.equals(historyId.job);
     }
-
-    @Override
-    public int hashCode() {
-        int result = seeker.hashCode();
-        result = 31 * result + job.hashCode();
-        return result;
-    }
 }

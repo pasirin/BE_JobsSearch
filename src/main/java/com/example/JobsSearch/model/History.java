@@ -2,6 +2,7 @@ package com.example.JobsSearch.model;
 
 import com.example.JobsSearch.model.util.HistoryId;
 import com.example.JobsSearch.model.util.InteractionType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -22,12 +23,15 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 public class History {
     @EmbeddedId
+    @JsonIgnore
     private HistoryId primaryKey;
 
     @CreatedDate
+    @JsonIgnore
     private LocalDateTime createdAt;
 
     @LastModifiedDate
+    @JsonIgnore
     private LocalDateTime updatedAt;
 
     @Enumerated(EnumType.STRING)
