@@ -93,7 +93,7 @@ public class SeekerService {
     }
     Seeker seeker = seekerRepository.findByUserId(id).get();
     List<History> history = historyRepository.findByPrimaryKeySeekerId(seeker.getId());
-    history.sort(Comparator.comparing(History::getUpdatedAt));
+    history.sort(Comparator.comparing(History::getUpdatedAt).reversed());
     return ResponseObject.ok().setData(history);
   }
 }

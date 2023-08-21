@@ -46,7 +46,7 @@ public class UserService {
 
   public ResponseObject getByUserId(Long id) {
     if (!userRepository.existsById(id)) {
-      return ResponseObject.message("There Aren't any user with the requested username");
+      return ResponseObject.message("There Aren't any user with the requested id");
     }
     if (seekerRepository.findByUserId(id).isPresent()) {
       return ResponseObject.ok().setData(seekerRepository.findByUserId(id));

@@ -4,6 +4,7 @@ import com.example.JobsSearch.model.HiringOrganization;
 import com.example.JobsSearch.payload.Request.HrUpdateProfileRequest;
 import com.example.JobsSearch.payload.Response.ResponseObject;
 import com.example.JobsSearch.repository.HiringOrganizationRepository;
+import com.example.JobsSearch.repository.JobRepository;
 import com.example.JobsSearch.repository.UserRepository;
 import com.example.JobsSearch.security.UserDetailsImpl;
 import com.example.JobsSearch.service.IHiringOrganizationService;
@@ -19,6 +20,8 @@ import java.util.stream.Collectors;
 @Service
 public class HiringOrganizationService implements IHiringOrganizationService {
   @Autowired HiringOrganizationRepository hiringOrganizationRepository;
+
+  @Autowired JobRepository jobRepository;
 
   @Override
   public Collection<HiringOrganization> getAll() {
@@ -57,9 +60,11 @@ public class HiringOrganizationService implements IHiringOrganizationService {
 
   @Override
   public ResponseObject delete(Long id) {
-    if (!hiringOrganizationRepository.existsById(id)) {
+    if (hiringOrganizationRepository.findById(id).isEmpty()) {
       return ResponseObject.message("There Aren't any HR with the provided Id");
     }
+    HiringOrganization hiringOrganization = hiringOrganizationRepository.findById(id).get();
+    jobRepository.deleteAllByOrganizationId(hiringOrganization.getId());
     hiringOrganizationRepository.deleteById(id);
     return ResponseObject.ok();
   }
