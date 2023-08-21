@@ -18,4 +18,6 @@ public class JobSearchRequest {
     private String location3;
     private List<Long> tagId;
     private Boolean only_meta;
+    private Integer startAtPagination;
+    private Integer endAtPagination;
 }

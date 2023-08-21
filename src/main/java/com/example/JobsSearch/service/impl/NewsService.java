@@ -62,7 +62,7 @@ public class NewsService implements ServiceCRUD<NewsRequest, News> {
   @Override
   public Collection<News> getAll() {
     List<News> newsCollection = newsRepository.findByOrderByUpdatedAtDesc();
-    newsCollection.sort(Comparator.comparing(News::getUpdatedAt));
+    newsCollection.sort(Comparator.comparing(News::getUpdatedAt).reversed());
     return newsCollection;
   }
 

@@ -5,15 +5,22 @@ import com.example.JobsSearch.model.util.*;
 import com.example.JobsSearch.model.util.InteractionType;
 import com.example.JobsSearch.payload.Request.JobRequest;
 import com.example.JobsSearch.payload.Request.JobSearchRequest;
+import com.example.JobsSearch.payload.Request.UtilRequest.MetaJobSearchResponse;
 import com.example.JobsSearch.payload.Response.ResponseObject;
 import com.example.JobsSearch.repository.*;
 import com.example.JobsSearch.repository.util.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.awt.print.Pageable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -55,7 +62,7 @@ public class JobService {
     }
     Long organizationId = hiringOrganizationRepository.findByUserId(userId).get().getId();
     List<Job> jobList = jobRepository.findByOrganizationId(organizationId);
-    jobList.sort(Comparator.comparing(Job::getUpdatedAt));
+    jobList.sort(Comparator.comparing(Job::getUpdatedAt).reversed());
     return ResponseObject.ok().setData(jobList);
   }
 
@@ -113,7 +120,6 @@ public class JobService {
     if (!cityName.isEmpty()) {
       specification = specification.and(hasCity(cityName));
     }
-
     // Lấy danh sách công việc theo các điều kiện tìm kiếm
     List<Job> jobs = jobRepository.findAll(specification);
 
@@ -124,12 +130,27 @@ public class JobService {
                 job ->
                     seeker.getHistories().stream()
                         .noneMatch(history -> history.getJob().getId().equals(job.getId())))
-                .distinct().collect(Collectors.toList());
-    if (jobSearchRequest.getOnly_meta() != null && jobSearchRequest.getOnly_meta()) {
-      return ResponseObject.ok().setData(filteredJobs.size());
+            .distinct()
+            .collect(Collectors.toList());
+    List<Job> paginatedList;
+    if(jobSearchRequest.getStartAtPagination()!= null && jobSearchRequest.getEndAtPagination() != null) {
+       paginatedList = jobs.subList(jobSearchRequest.getStartAtPagination(), jobSearchRequest.getEndAtPagination());
+    } else {
+      paginatedList = jobs;
     }
+    if (jobSearchRequest.getOnly_meta() != null && jobSearchRequest.getOnly_meta()) {
+      return ResponseObject.ok()
+          .setData(asJsonString(MetaJobSearchResponse.create(jobs.size(), getAll().size())));
+    }
+    return ResponseObject.ok().setData(paginatedList);
+  }
 
-    return ResponseObject.ok().setData(filteredJobs);
+  public static String asJsonString(final Object obj) {
+    try {
+      return new ObjectMapper().writeValueAsString(obj);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
   }
 
   private Specification<Job> hasCity(List<String> city) {
@@ -171,6 +192,10 @@ public class JobService {
       return ResponseObject.message("There Aren't any job with the requested id");
     }
     Job job = jobRepository.findById(jobId).get();
+    LocalDate currentTime = LocalDate.now();
+    if (job.getExpiresAt().isBefore(currentTime)) {
+      return ResponseObject.message("Job has expired and can't be interact with");
+    }
     Seeker seeker = seekerRepository.findByUserId(userId).get();
 
     HistoryId historyId = new HistoryId(seeker, job);
@@ -297,19 +322,19 @@ public class JobService {
         .getWorkingHours()
         .forEach(
             workingHourRequest -> {
-                // Check if user send time or not
-                if(workingHourRequest.getHours() == null) {
-                    long tempCountHours =
-                            workingHourRequest
-                                    .getStart_time()
-                                    .until(workingHourRequest.getEnd_time(), ChronoUnit.HOURS);
-                    double tempCountMinute =
-                            workingHourRequest
-                                    .getStart_time()
-                                    .until(workingHourRequest.getEnd_time(), ChronoUnit.MINUTES);
-                    double tempTime = tempCountHours + (tempCountMinute % 60) / 60;
-                    workingHourRequest.setHours(tempTime);
-                }
+              // Check if user send time or not
+              if (workingHourRequest.getHours() == null) {
+                long tempCountHours =
+                    workingHourRequest
+                        .getStart_time()
+                        .until(workingHourRequest.getEnd_time(), ChronoUnit.HOURS);
+                double tempCountMinute =
+                    workingHourRequest
+                        .getStart_time()
+                        .until(workingHourRequest.getEnd_time(), ChronoUnit.MINUTES);
+                double tempTime = tempCountHours + (tempCountMinute % 60) / 60;
+                workingHourRequest.setHours(tempTime);
+              }
               WorkingHour workingHour =
                   new WorkingHour(
                       workingHourRequest.getHours(),
