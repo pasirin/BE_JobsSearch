@@ -133,14 +133,23 @@ public class JobService {
             .distinct()
             .collect(Collectors.toList());
     List<Job> paginatedList;
-    if(jobSearchRequest.getStartAtPagination()!= null && jobSearchRequest.getEndAtPagination() != null) {
-       paginatedList = jobs.subList(jobSearchRequest.getStartAtPagination(), jobSearchRequest.getEndAtPagination());
+    if (jobSearchRequest.getStartAtPagination() != null
+        && jobSearchRequest.getEndAtPagination() != null) {
+      if (jobSearchRequest.getEndAtPagination() > jobs.size()) {
+        paginatedList = filteredJobs.subList(jobSearchRequest.getStartAtPagination(), jobs.size());
+      } else if (jobSearchRequest.getStartAtPagination() > jobs.size()) {
+        paginatedList = new ArrayList<>();
+      } else {
+        paginatedList =
+            filteredJobs.subList(
+                jobSearchRequest.getStartAtPagination(), jobSearchRequest.getEndAtPagination());
+      }
     } else {
       paginatedList = jobs;
     }
     if (jobSearchRequest.getOnly_meta() != null && jobSearchRequest.getOnly_meta()) {
       return ResponseObject.ok()
-          .setData(asJsonString(MetaJobSearchResponse.create(jobs.size(), getAll().size())));
+          .setData(asJsonString(MetaJobSearchResponse.create(filteredJobs.size(), getAll().size())));
     }
     return ResponseObject.ok().setData(paginatedList);
   }

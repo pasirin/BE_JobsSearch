@@ -8,6 +8,7 @@ import com.example.JobsSearch.payload.Response.ResponseObject;
 import com.example.JobsSearch.security.UserDetailsImpl;
 import com.example.JobsSearch.service.impl.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -58,9 +59,15 @@ public class AuthController {
   }
 
   @PostMapping("/change-password")
-  public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
-    UserDetailsImpl object =
-        (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+  public ResponseEntity<?> changePassword(
+      @Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
+    UserDetailsImpl object;
+    try {
+      object =
+          (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e);
+    }
     ResponseObject output =
         authService.changePassword(object.getId(), object.getUsername(), changePasswordRequest);
     return output.getStatus()
@@ -70,8 +77,13 @@ public class AuthController {
 
   @PutMapping("/users")
   public ResponseEntity<?> changeEmail(@RequestBody String email) {
-    UserDetailsImpl object =
-        (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    UserDetailsImpl object;
+    try {
+      object =
+          (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e);
+    }
     ResponseObject output = authService.changeEmail(object.getId(), email);
     return output.getStatus()
         ? ResponseEntity.ok().build()

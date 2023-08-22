@@ -8,6 +8,7 @@ import com.example.JobsSearch.security.UserDetailsImpl;
 import com.example.JobsSearch.service.impl.JobService;
 import com.example.JobsSearch.service.impl.SeekerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,9 +27,14 @@ public class SeekerController {
 
   @GetMapping("/profile")
   public ResponseEntity<?> getProfile() {
-    UserDetailsImpl userDetails =
-        (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    ResponseObject output = seekerService.getProfile(userDetails.getId());
+    UserDetailsImpl object;
+    try {
+      object =
+          (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e);
+    }
+    ResponseObject output = seekerService.getProfile(object.getId());
     return output.getStatus()
         ? ResponseEntity.ok().body(output.getData())
         : ResponseEntity.badRequest().body(output.getMessage());
@@ -69,10 +75,11 @@ public class SeekerController {
 
   @GetMapping("/history")
   public ResponseEntity<?> getHistory() {
-    UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    UserDetailsImpl userDetails =
+        (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     ResponseObject output = seekerService.getSeekerHistory(userDetails.getId());
     return output.getStatus()
-            ? ResponseEntity.ok().body(output.getData())
-            : ResponseEntity.badRequest().body(output.getMessage());
+        ? ResponseEntity.ok().body(output.getData())
+        : ResponseEntity.badRequest().body(output.getMessage());
   }
 }
