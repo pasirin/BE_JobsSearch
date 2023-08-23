@@ -135,9 +135,9 @@ public class JobService {
     List<Job> paginatedList;
     if (jobSearchRequest.getStartAtPagination() != null
         && jobSearchRequest.getEndAtPagination() != null) {
-      if (jobSearchRequest.getEndAtPagination() > jobs.size()) {
-        paginatedList = filteredJobs.subList(jobSearchRequest.getStartAtPagination(), jobs.size());
-      } else if (jobSearchRequest.getStartAtPagination() > jobs.size()) {
+      if (jobSearchRequest.getEndAtPagination() > filteredJobs.size()) {
+        paginatedList = filteredJobs.subList(jobSearchRequest.getStartAtPagination(), filteredJobs.size());
+      } else if (jobSearchRequest.getStartAtPagination() > filteredJobs.size()) {
         paginatedList = new ArrayList<>();
       } else {
         paginatedList =
@@ -145,7 +145,7 @@ public class JobService {
                 jobSearchRequest.getStartAtPagination(), jobSearchRequest.getEndAtPagination());
       }
     } else {
-      paginatedList = jobs;
+      paginatedList = filteredJobs;
     }
     if (jobSearchRequest.getOnly_meta() != null && jobSearchRequest.getOnly_meta()) {
       return ResponseObject.ok()
