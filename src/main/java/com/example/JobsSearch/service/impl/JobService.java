@@ -120,6 +120,7 @@ public class JobService {
     if (!cityName.isEmpty()) {
       specification = specification.and(hasCity(cityName));
     }
+    specification = specification.and(isNotExpired());
     // Lấy danh sách công việc theo các điều kiện tìm kiếm
     List<Job> jobs = jobRepository.findAll(specification);
 
@@ -136,7 +137,8 @@ public class JobService {
     if (jobSearchRequest.getStartAtPagination() != null
         && jobSearchRequest.getEndAtPagination() != null) {
       if (jobSearchRequest.getEndAtPagination() > filteredJobs.size()) {
-        paginatedList = filteredJobs.subList(jobSearchRequest.getStartAtPagination(), filteredJobs.size());
+        paginatedList =
+            filteredJobs.subList(jobSearchRequest.getStartAtPagination(), filteredJobs.size());
       } else if (jobSearchRequest.getStartAtPagination() > filteredJobs.size()) {
         paginatedList = new ArrayList<>();
       } else {
@@ -149,7 +151,8 @@ public class JobService {
     }
     if (jobSearchRequest.getOnly_meta() != null && jobSearchRequest.getOnly_meta()) {
       return ResponseObject.ok()
-          .setData(asJsonString(MetaJobSearchResponse.create(filteredJobs.size(), getAll().size())));
+          .setData(
+              asJsonString(MetaJobSearchResponse.create(filteredJobs.size(), getAll().size())));
     }
     return ResponseObject.ok().setData(paginatedList);
   }
@@ -170,6 +173,11 @@ public class JobService {
         return criteriaBuilder.and();
       }
     };
+  }
+
+  private Specification<Job> isNotExpired() {
+    return (root, query, criteriaBuilder) ->
+        criteriaBuilder.greaterThan(root.get("expiresAt"), LocalDate.now());
   }
 
   private Specification<Job> hasStartTime(LocalTime startTime) {

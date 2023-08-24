@@ -5,6 +5,7 @@ D:\WorkSpace\InternProject\BE_JobsSearch\src\main\java\com\example\JobsSearch\se
 D:\WorkSpace\InternProject\BE_JobsSearch\src\main\java\com\example\JobsSearch\payload\Request\UtilRequest\CompanySurveyRequest.java
 D:\WorkSpace\InternProject\BE_JobsSearch\src\main\java\com\example\JobsSearch\model\util\Property.java
 D:\WorkSpace\InternProject\BE_JobsSearch\src\main\java\com\example\JobsSearch\security\JwtTokenProvider.java
+D:\WorkSpace\InternProject\BE_JobsSearch\src\main\java\com\example\JobsSearch\payload\Request\UtilRequest\MetaJobSearchResponse.java
 D:\WorkSpace\InternProject\BE_JobsSearch\src\main\java\com\example\JobsSearch\payload\Request\UtilRequest\WorkingHourRequest.java
 D:\WorkSpace\InternProject\BE_JobsSearch\src\main\java\com\example\JobsSearch\repository\util\LocationRepository.java
 D:\WorkSpace\InternProject\BE_JobsSearch\src\main\java\com\example\JobsSearch\model\util\HistoryId.java
